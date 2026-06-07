@@ -676,6 +676,59 @@
         height: 400px;
       }
     }
+
+    /* Sights and Hotels Recommendation Component */
+    .recommend-section {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .recommend-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .recommend-city {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      border-left: 2px solid var(--color-accent);
+      padding-left: 0.4rem;
+      margin-bottom: 0.2rem;
+    }
+    .recommend-item {
+      font-size: 0.72rem;
+      line-height: 1.4;
+      margin-bottom: 0.3rem;
+    }
+    .recommend-item:last-child {
+      margin-bottom: 0;
+    }
+    .recommend-item-title {
+      font-weight: 600;
+      color: var(--color-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .booking-tag {
+      font-size: 0.6rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--color-success);
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .recommend-desc {
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
   </style>
 </head>
 <body>
@@ -856,6 +909,106 @@
             <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>车载小玩具、磨牙零食及绘本</span></label>
             <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>大量湿纸巾、垃圾袋、便携式小便器</span></label>
           </div>
+        </div>
+      </div>
+
+      <!-- Sights and Hotels Recommendations -->
+      <div style="margin-top: 0.5rem;">
+        <div class="panel-title">
+          <svg style="width:1.1rem; height:1.1rem; fill:none; stroke:currentColor; stroke-width:2" viewBox="0 0 24 24">
+            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          沿途景点与高性价比酒店推荐
+        </div>
+        <div class="recommend-section">
+          
+          <!-- Turpan -->
+          <div class="recommend-box">
+            <div class="recommend-city">吐鲁番市 (避暑人文线)</div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>📍 坎儿井民俗园/坎儿井乐园</span>
+              </div>
+              <div class="recommend-desc">地下古水利系统，林荫茂密，温度较地面低3-5°C，步行路程短，非常适合老人和宝宝避暑防暴晒。</div>
+            </div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>📍 葡萄沟景区</span>
+              </div>
+              <div class="recommend-desc">依山傍水，葡萄架下成片绿荫和溪流，凉爽宜人，适合家庭休闲吃瓜纳凉。</div>
+            </div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>📍 吐鲁番博物馆</span>
+              </div>
+              <div class="recommend-desc">馆内冷气充足，拥有恐龙化石和著名的巨犀化石展厅，对3岁宝宝很有吸引力，且能避开烈日。</div>
+            </div>
+            <div class="recommend-item" style="border-top: 1px dashed var(--border-glass); padding-top: 0.4rem; margin-top: 0.2rem;">
+              <div class="recommend-item-title">
+                <span>🏨 吐鲁番阿凡提庄园 (葡萄沟店)</span>
+                <span class="booking-tag">预订：携程旅行 / 美团</span>
+              </div>
+              <div class="recommend-desc">特色园林民宿，葡萄树环绕，有挖沙池与小动物互动，亲子氛围好，带老人小孩入住体验感极佳。</div>
+            </div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>🏨 吐鲁番希尔顿欢朋酒店</span>
+                <span class="booking-tag">预订：携程旅行 / 去哪儿网</span>
+              </div>
+              <div class="recommend-desc">市区高口碑品牌连锁，制冷效果极强，环境整洁，早餐丰富，带老人小孩出行最稳健的高性价比之选。</div>
+            </div>
+          </div>
+
+          <!-- Hami -->
+          <div class="recommend-box">
+            <div class="recommend-city">哈密市 (绿洲历史线)</div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>📍 哈密回王府 & 阿勒屯古街</span>
+              </div>
+              <div class="recommend-desc">了解哈密历史与维吾尔族文化的代表景点，多为平坦道路且有树荫，带老人宝宝散步完全不费体力。</div>
+            </div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>📍 哈密市博物馆</span>
+              </div>
+              <div class="recommend-desc">馆内气温适宜，展示了哈密特有的哈密瓜栽培史及当地历史文物，非常适合上午或午后避晒参观。</div>
+            </div>
+            <div class="recommend-item" style="border-top: 1px dashed var(--border-glass); padding-top: 0.4rem; margin-top: 0.2rem;">
+              <div class="recommend-item-title">
+                <span>🏨 哈密宾馆</span>
+                <span class="booking-tag">预订：携程旅行 / 同程旅行</span>
+              </div>
+              <div class="recommend-desc">本地老牌国宾馆，拥有超大中式院落，绿化率极高，空气清新。晚上适合推婴儿车或带老人在此漫步。</div>
+            </div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>🏨 哈密建国饭店</span>
+                <span class="booking-tag">预订：携程旅行 / 美团</span>
+              </div>
+              <div class="recommend-desc">性价比高，设施较为现代化，地理位置在市区繁华段，吃饭采购极度方便。</div>
+            </div>
+          </div>
+
+          <!-- Guazhou -->
+          <div class="recommend-box">
+            <div class="recommend-city">瓜州县 (河西过境段)</div>
+            <div class="recommend-item">
+              <div class="recommend-item-title">
+                <span>📍 大地之子大型雕塑群</span>
+              </div>
+              <div class="recommend-desc">G30高速瓜州出口右转即达，戈壁荒漠中沉睡的巨型婴儿雕塑。免费开放，停下车走几步即可打卡，无需高强度攀爬。</div>
+            </div>
+            <div class="recommend-item" style="border-top: 1px dashed var(--border-glass); padding-top: 0.4rem; margin-top: 0.2rem;">
+              <div class="recommend-item-title">
+                <span>🏨 瓜州国宾大酒店</span>
+                <span class="booking-tag">预订：携程旅行 / 去哪网</span>
+              </div>
+              <div class="recommend-desc">瓜州当地高规格、高性价比的酒店，安全安静，停车方便，能够为长途转场提供高品质的休息睡眠。</div>
+            </div>
+          </div>
+
         </div>
       </div>
       
