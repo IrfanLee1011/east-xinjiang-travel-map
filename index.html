@@ -894,11 +894,11 @@
     <div class="stats-bar">
       <div class="stat-badge">
         <span>推荐方案：</span>
-        <span class="accent" id="badge-plan-name">12天11晚 深度执行版</span>
+        <span class="accent" id="badge-plan-name">9天8晚 完整路线版</span>
       </div>
       <div class="stat-badge">
         <span>估算总长：</span>
-        <span class="sky" id="badge-plan-miles">约 3,800 km</span>
+        <span class="sky" id="badge-plan-miles">约 2,800 km</span>
       </div>
       <div class="stat-badge">
         <span>路况：</span>
@@ -925,7 +925,7 @@
       
       <!-- Tab Switcher -->
       <div class="tab-container">
-        <button class="route-tab active" id="btn-tab-12" onclick="switchRoutePlan(12)">12天11晚 深度执行版</button>
+        <button class="route-tab active" id="btn-tab-9" onclick="switchRoutePlan(9)">9天8晚 完整路线版</button>
         <button class="route-tab" id="btn-tab-7" onclick="switchRoutePlan(7)">7天6晚 舒适经典版</button>
       </div>
       
@@ -1245,8 +1245,8 @@
       urumqi: { name: '乌鲁木齐', coords: [43.82, 87.61], desc: '新疆首府，大巴扎、大峡谷与博物馆' },
       tianchi: { name: '天山天池', coords: [43.90, 88.13], desc: '雪山碧湖，世界自然遗产' },
       
-      // Detailed places for the 12-day Execution Itinerary
-      hami_hotel: { name: '铂雅精品酒店', coords: [42.8123, 93.5049], desc: '哈密下榻酒店 (哈密火车站店)' },
+      // Detailed places for the 9-day Execution Itinerary
+      hami_hotel: { name: '哈密住处', coords: [42.8123, 93.5049], desc: '哈密下榻酒店/住处' },
       xingjiang_restaurant: { name: '兴江抓饭肉汤馆', coords: [42.8258, 93.5135], desc: '晚饭就餐点 (光明路店)' },
       hami_museum: { name: '哈密博物馆', coords: [42.8306, 93.5147], desc: '哈密市博物馆，看哈密瓜史与历史文物' },
       mukamu: { name: '木卡姆传承中心', coords: [42.8302, 93.518], desc: '哈密木卡姆传承中心，非遗文化展示' },
@@ -1254,18 +1254,23 @@
       aleten_street: { name: '阿勒屯古街', coords: [42.809, 93.520], desc: '非遗文化街区，手工艺品与特产采买区', thumbnail: 'assets/aleten.png' },
       yiloulan_restaurant: { name: '驿楼兰·新疆菜', coords: [42.8115, 93.5041], desc: '特色新疆菜 (火车站店)' },
       
-      // Attractions with generated visual assets
-      balikun_lake: { name: '巴里坤湖', coords: [43.66, 92.80], desc: '高原咸水湖，清凉宁静', thumbnail: 'assets/balikun.png' },
-      balikun_restaurant: { name: '巴里坤文博园餐厅', coords: [43.601, 93.023], desc: '巴里坤县城就餐点' },
-      balikun_grass: { name: '巴里坤草原', coords: [43.60, 93.00], desc: '高山草场，适合老人孩子漫步吸氧', thumbnail: 'assets/balikun.png' },
-      huancai_lake: { name: '幻彩湖', coords: [43.10, 94.18], desc: '会随天气变色的粉红盐湖', thumbnail: 'assets/huancai.png' },
-      yanchi_restaurant: { name: '盐池镇鸿福饭庄', coords: [43.15, 94.22], desc: '盐池镇午餐补给点' },
-      shazaoquan: { name: '沙枣泉出口', coords: [42.50, 93.10], desc: 'G30大海道出口' },
-      dahaidao_east: { name: '大海道东门', coords: [42.22, 93.12], desc: '大海道东门游客中心' },
-      dahaidao_red: { name: '红柳滩游客服务中心', coords: [42.15, 92.95], desc: '大海道内部最稳补给点', thumbnail: 'assets/dahaidao.png' },
-      dahaidao_line: { name: '大海道常规线', coords: [42.20, 92.90], desc: '常规观景线 (严禁驶离公路)', thumbnail: 'assets/dahaidao.png' },
-      tuyugou: { name: '吐峪沟服务区', coords: [42.85, 89.69], desc: 'G30高速吐鲁番段服务区，回程补给点' },
-      hanyou_hotel: { name: '汉友酒店', coords: [43.8745, 87.5752], desc: '乌鲁木齐下榻酒店 (乌鲁木齐铁路局店)' },
+      // Shanshan County Details
+      shanshan_hotel: { name: '鄯善住处', coords: [42.871, 90.208], desc: '鄯善县城住处/酒店' },
+      shanshan_desert: { name: '库木塔格沙漠', coords: [42.79, 90.20], desc: '世界唯一与城市相连的沙漠，沙海落日景致极佳', thumbnail: 'assets/kumutager.png' },
+      damoqixiang: { name: '大漠奇香馕坑肉', coords: [42.863, 90.211], desc: '特色馕坑肉午餐点' },
+      xiaomianyang: { name: '小绵羊手抓肉', coords: [42.872, 90.222], desc: '特色羊肉晚餐点' },
+
+      // Turpan Details
+      huoyanshan: { name: '火焰山景区', coords: [42.903, 89.462], desc: '红砂岩风蚀山体，西游记打卡地', thumbnail: 'assets/huoyanshan.png' },
+      turpan_hotel: { name: '吐鲁番住处', coords: [42.936, 89.176], desc: '吐鲁番市区下榻住处/酒店' },
+      halike: { name: '哈里克特色抓饭', coords: [42.935, 89.182], desc: '特色午餐抓饭店' },
+      putaogou: { name: '葡萄沟景区', coords: [43.004, 89.201], desc: '避暑清凉绿洲，葡萄架长廊', thumbnail: 'assets/putaogou.png' },
+      adil: { name: '阿迪力快餐厅', coords: [42.992, 89.205], desc: '葡萄沟景区内午餐点' },
+      silu_restaurant: { name: '丝路餐厅', coords: [42.942, 89.191], desc: '特色晚餐就餐点' },
+
+      // Urumqi / Return Details
+      tuyugou: { name: '吐峪沟服务区', coords: [42.85, 89.69], desc: 'G30高速吐鲁番段服务区，补给点' },
+      hanyou_hotel: { name: '乌鲁木齐住处', coords: [43.8745, 87.5752], desc: '乌鲁木齐下榻住处/酒店' },
       hetian_restaurant: { name: '和阗玫瑰抓饭', coords: [43.8795, 87.5702], desc: '抓饭总店 (原始/羊排抓饭)' },
       xinjiang_museum: { name: '新疆博物馆', coords: [43.824, 87.586], desc: '新疆维吾尔自治区博物馆，历史与干尸展', thumbnail: 'assets/museum.png' },
       yangcun_museum: { name: '相约·羊村小馆(博物馆店)', coords: [43.8255, 87.5855], desc: '午餐就餐点 (新疆博物馆旁)' },
@@ -1273,17 +1278,14 @@
       mafenghua_restaurant: { name: '马风花大盘鸡新疆菜', coords: [43.834, 87.596], desc: '地道大盘鸡皮带面餐馆' },
       tianchi_center: { name: '天池游客中心', coords: [43.985, 88.136], desc: '天山天池游客服务中心及快餐区' },
       tianchi_lake: { name: '天池主湖区', coords: [43.90, 88.13], desc: '雪山碧湖，定海神针与湖畔步道', thumbnail: 'assets/tianchi.png' },
-      yangcun_beijingrd: { name: '相约·羊村小馆(北京路店)', coords: [43.869, 87.576], desc: '晚餐就餐点 (顺路酒店)' },
-      grand_canyon: { name: '天山大峡谷', coords: [43.45, 87.45], desc: '国家5A景区，雪山、松林、峡谷主线', thumbnail: 'assets/canyon.png' },
-      grand_canyon_restaurant: { name: '天山大峡谷游客中心餐厅', coords: [43.43, 87.43], desc: '大峡谷景区午餐补给点' },
       water_temple: { name: '水磨沟公园', coords: [43.81, 87.63], desc: '市区清凉避暑公园，泉水温暖鱼群多' },
       jinquan_mall: { name: '金泉商城', coords: [43.784, 87.616], desc: '手工艺品与民族特色文创采买地' },
-      bazaar: { name: '新疆国际大巴扎', coords: [43.779, 87.612], desc: '西域风情步行街，采买干果与伴手礼', thumbnail: 'assets/bazaar.png' }, // bazaar theme
+      bazaar: { name: '新疆国际大巴扎', coords: [43.779, 87.612], desc: '西域风情步行街，采买干果与伴手礼', thumbnail: 'assets/bazaar.png' },
       hetiandao: { name: '和田二街', coords: [43.79, 87.59], desc: '乌鲁木齐地道小吃美食街 (烤包子/烤肉/酸奶)' }
     };
 
-    // Itinerary details for 12-day vs 7-day versions
-    const itinerary12Days = [
+    // Itinerary details for 9-day vs 7-day versions
+    const itinerary9Days = [
       {
         day: 'D1',
         title: '酒泉 -> 哈密市区 (长途转场)',
@@ -1291,202 +1293,148 @@
         duration: '行车约 7.5 小时',
         locations: ['jiuquan', 'liuyuan', 'hami_hotel', 'xingjiang_restaurant', 'hami_hotel'],
         schedule: [
-          { time: '08:00', desc: '从酒泉出发，走 G30连霍高速，开启第一天转场。' },
-          { time: '12:00', desc: '抵达 <b>柳园服务区</b> 吃午饭。午饭固定：牛肉面/盖饭 + 孩子喝酸奶 + 面包。不下高速折腾。' },
-          { time: '15:30', desc: '抵达哈密市区，入住 <b>铂雅精品酒店(哈密火车站店)</b> 办入住并好好午休。' },
-          { time: '18:00', desc: '晚餐吃 <b>兴江抓饭肉汤馆(光明路店)</b>。这顿固定点：后腱子抓饭 + 肉汤 + 羊肉串。' },
-          { time: '19:30', desc: '返回住处好好休息，第一天只缓路，不安排任何景点。' }
+          { time: '08:00', desc: '从酒泉出发，走 G30连霍高速，开启西北转场。' },
+          { time: '12:00-12:40', desc: '在 <b>柳园服务区</b> 吃午饭。午饭固定：牛肉面/盖饭 + 孩子喝酸奶 + 面包。不下高速折腾。' },
+          { time: '15:30-16:00', desc: '抵达哈密市区，入住哈密住处并好好休息。' },
+          { time: '18:00-19:10', desc: '晚餐享用 <b>兴江抓饭肉汤馆(光明路店)</b>。固定点：后腱子抓饭 + 肉汤 + 羊肉串。' },
+          { time: '19:30', desc: '返回住处休息。' }
         ],
-        tips: '今日纯坐车缓路。进哈密前注意排队通过星星峡安检站，准备好所有人身份证。哈密天气炎热，进房前先开启空调。'
+        tips: '第一天不安排景点，只负责进哈密、吃饭、休息。进新疆检查站排队，带好全员身份证件。'
       },
       {
         day: 'D2',
-        title: '哈密市区线：博物馆 + 木卡姆 + 阿勒屯古街',
+        title: '哈密市区游：博物馆 + 木卡姆 + 阿勒屯古街',
         distance: '市区约 15 km',
-        duration: '行车约 40 分钟',
+        duration: '行车约 30 分钟',
         locations: ['hami_hotel', 'hami_museum', 'mukamu', 'qinghe_kitchen', 'hami_hotel', 'aleten_street', 'yiloulan_restaurant', 'hami_hotel'],
         schedule: [
-          { time: '09:00', desc: '从酒店出发前往 <b>哈密市博物馆</b>。' },
-          { time: '09:10', desc: '09:10-10:40 逛博物馆，了解哈密瓜历史与哈密王府古文物，控制在 1.5 小时。' },
-          { time: '10:45', desc: '步行或短途开车至旁边的 <b>哈密木卡姆传承中心</b>。' },
-          { time: '10:50', desc: '10:50-11:40 参观木卡姆展陈。说明：如果当天刚好有现场演出，就看 30-40 分钟；如果没有，就按展陈参观。' },
-          { time: '12:00', desc: '午餐享用 <b>青禾小厨(新民五路店)</b>。这顿固定点：大盘鸡 + 皮带面/拌面 + 一个青菜。' },
-          { time: '14:00', desc: '14:00-16:00 返回住处午休，避开酷热。' },
-          { time: '16:40', desc: '前往 <b>阿勒屯古街广场</b>。16:40-18:30 逛古街，只做两件事：散步 + 买小东西。' },
-          { time: '18:30', desc: '买葡萄干、哈密瓜干、花帽、刺绣小包、小挂件作为纪念。' },
-          { time: '18:40', desc: '晚餐吃 <b>驿楼兰·新疆菜(火车站店)</b>。这顿固定点：烤包子 + 拉条子 + 烤羊肉串 + 酸奶。' },
-          { time: '20:00', desc: '在古街顺手买好第二天路餐：馕、酸奶、香蕉、矿泉水，买完回住处休息。' }
+          { time: '09:30', desc: '从住处出发前往 <b>哈密市博物馆</b>。' },
+          { time: '10:00-11:40', desc: '逛 <b>哈密市博物馆</b>，系统了解当地历史和特产瓜种植历史。' },
+          { time: '11:45-12:30', desc: '前往旁边的哈密木卡姆传承中心，欣赏木卡姆非遗相关展陈/非遗内容区（如有现场演出看30-40分钟，没有则看展陈）。' },
+          { time: '12:40-13:40', desc: '午饭吃 <b>青禾小厨(新民五路店)</b>。这顿固定点：大盘鸡 + 皮带面/拌面 + 一个青菜。' },
+          { time: '14:00-16:00', desc: '回住处午休避暑，躲避烈日。' },
+          { time: '16:30', desc: '出发去 <b>阿勒屯古街</b>。' },
+          { time: '16:40-18:30', desc: '散步逛古街，顺便买小东西：葡萄干、哈密瓜干、花帽、刺绣小物。' },
+          { time: '18:40-20:00', desc: '晚餐吃 <b>驿楼兰·新疆菜(火车站店)</b>。固定点：烤包子 + 拉条子 + 烤羊肉串 + 酸奶。' },
+          { time: '20:20', desc: '返回住处休息，顺手买第二天路餐。' }
         ],
-        tips: '古街非常平坦，适合推婴儿车和散步。这天专门负责逛和买，防晒仍是第一要务。'
+        tips: '市区路线非常平缓，适合推婴儿车。哈密白天干燥晴热，记得在古街给老人孩子随时补水。'
       },
       {
         day: 'D3',
-        title: '巴里坤湖 / 草原日 (高原碧水与高山草场)',
-        distance: '280 km (往返)',
-        duration: '行车单程约 2 小时',
-        locations: ['hami_hotel', 'balikun_lake', 'balikun_restaurant', 'balikun_grass', 'hami_hotel'],
+        title: '哈密 -> 鄯善 (沙海落日之旅)',
+        distance: '340 km',
+        duration: '行车约 4 小时',
+        locations: ['hami_hotel', 'shanshan_hotel', 'damoqixiang', 'shanshan_hotel', 'shanshan_desert', 'xiaomianyang', 'shanshan_hotel'],
         schedule: [
-          { time: '07:30', desc: '从哈密市区酒店出发前往 <b>巴里坤湖</b>，自驾车程约 2 小时左右。' },
-          { time: '09:40', desc: '09:40-12:00 游览 <b>巴里坤湖景区</b>。玩法固定：湖边看景 -> 拍照 -> 找阴凉处坐，不做长距离暴走。' },
-          { time: '12:10', desc: '在 <b>巴里坤湖景区停车区</b> 吃昨天买好的路餐。' },
-          { time: '13:00', desc: '13:00-15:30 继续在 <b>巴里坤湖景区南侧草原观景带</b> 活动。说明：这里不用换导航点，巴里坤湖和草原本来就是一条线，老人可在草地休息，幼童可在安全草场玩耍。' },
-          { time: '15:40', desc: '准时返程回哈密。' },
-          { time: '18:00', desc: '回到哈密市区。' },
-          { time: '18:40', desc: '晚餐享用 <b>青禾小厨(新民五路店)</b>。说明：如果昨天更喜欢 <b>驿楼兰</b>，今晚就去重复吃。' },
-          { time: '20:00', desc: '20:00 返回住处洗漱休息。' }
+          { time: '08:00', desc: '从哈密出发去鄯善，自驾车程按 4小时左右 算。' },
+          { time: '12:00-13:00', desc: '抵达鄯善，午饭吃 <b>大漠奇香馕坑肉</b>。' },
+          { time: '13:10-15:30', desc: '到住处或县城酒店休息，避开午后最热时段。' },
+          { time: '16:00', desc: '前往 <b>库木塔格沙漠</b> 景区。' },
+          { time: '16:10-19:20', desc: '畅玩 <b>库木塔格沙漠</b>。玩法固定：进核心区 -> 孩子玩沙 -> 老人看景休息 -> 傍晚凉爽时拍照。' },
+          { time: '19:40-20:30', desc: '晚餐吃 <b>小绵羊手抓肉</b>。' },
+          { time: '21:00', desc: '返回住处休息。' }
         ],
-        tips: '巴里坤属于高山草甸，海拔约 1650 米，气温比哈密市区低得多，但紫外线极强，必须做好全身防晒，多带一件防风外套。'
+        tips: '<b>极其重要：</b> 库木塔格沙漠必须放在傍晚游玩，绝对不要中午去，沙面温度极高！带好防沙套、防晒霜、帽子以及水。'
       },
       {
         day: 'D4',
-        title: '幻彩湖盐湖色彩日',
-        distance: '350 km (往返)',
-        duration: '行车单程约 2.5 小时',
-        locations: ['hami_hotel', 'huancai_lake', 'yanchi_restaurant', 'hami_hotel', 'yiloulan_restaurant', 'hami_hotel'],
+        title: '鄯善 -> 吐鲁番 (火焰山探秘)',
+        distance: '90 km',
+        duration: '行车约 1.5 小时',
+        locations: ['shanshan_hotel', 'huoyanshan', 'turpan_hotel', 'halike', 'turpan_hotel', 'silu_restaurant', 'turpan_hotel'],
         schedule: [
-          { time: '08:00', desc: '从哈密市区出发前往 <b>幻彩湖景区</b>。自驾车程按 2 小时 - 2 小时 20 分算。' },
-          { time: '10:20', desc: '10:20-12:00 游览 <b>幻彩湖景区</b>。玩法固定：观景台看湖色 -> 拍照 -> 严禁将前驱 SUV 往野地里开。' },
-          { time: '12:10', desc: '在 <b>幻彩湖景区停车区</b> 吃自带路餐。路餐今天出发前就带好：馕、鸡蛋、酸奶、香蕉、水。' },
-          { time: '13:00', desc: '13:00-15:00 继续看景，15:00 准时起程返程。' },
-          { time: '17:20', desc: '回到哈密市区。' },
-          { time: '18:30', desc: '晚餐在 <b>驿楼兰·新疆菜(火车站店)</b> 享用。' },
-          { time: '20:00', desc: '返回住处。顺手准备明天大海道自驾路餐：水多带、再加面包和小零食，早点休息。' }
+          { time: '08:30', desc: '从鄯善出发去 <b>火焰山景区</b>。' },
+          { time: '10:00-11:40', desc: '游览 <b>火焰山</b>。玩法固定：看巨型温度计打卡 -> 进地宫看展陈 -> 外景拍合照 -> 及时撤离。' },
+          { time: '12:10-13:10', desc: '午餐吃 <b>哈里克特色抓饭</b>。' },
+          { time: '13:30-16:00', desc: '抵达吐鲁番市区，办理入住并回住处进行午休。' },
+          { time: '17:00-18:00', desc: '吐鲁番市区内慢走，散步补水，顺便买本地新鲜水果。' },
+          { time: '18:30-19:40', desc: '晚餐在市区内解决，不再排第二个景点，避免过度劳累。' },
+          { time: '20:00', desc: '返回住处休息。' }
         ],
-        tips: '幻彩湖路况良好，但属于高盐湖区，绝对不要驾车驶离铺装路面！今天盐湖在阳光下变粉，拍照效果最佳。'
+        tips: '<b>极其重要：</b> 火焰山必须放在上午游玩，下午温度过于恐怖。地宫内相对凉爽。'
       },
       {
         day: 'D5',
-        title: '大海道日 (常规游客线自驾)',
-        distance: '360 km (往返)',
-        duration: '单程行车约 2.5 小时',
-        locations: ['hami_hotel', 'shazaoquan', 'dahaidao_east', 'dahaidao_red', 'dahaidao_line', 'hami_hotel', 'xingjiang_restaurant', 'hami_hotel'],
+        title: '吐鲁番第2天：清凉葡萄沟',
+        distance: '约 30 km',
+        duration: '行车约 1 小时',
+        locations: ['turpan_hotel', 'putaogou', 'adil', 'turpan_hotel', 'silu_restaurant', 'turpan_hotel'],
         schedule: [
-          { time: '06:30', desc: '早上 06:30 从哈密市区出发，避开高温。' },
-          { time: '07:40', desc: '抵达 G30 高速 <b>沙枣泉出口</b>。' },
-          { time: '08:00', desc: '08:00-09:10 开到 <b>大海道东门游客中心</b>。说明：东门前段多为铺装路面。' },
-          { time: '09:10', desc: '09:10-10:30 继续往 <b>红柳滩游客服务点</b> 方向走。说明：后段会有沙石路，前驱 SUV 需减速慢行。' },
-          { time: '10:30', desc: '10:30-13:30 只玩常规观景线。玩法固定：游客中心 -> 红柳滩 -> 近核心观景点 -> 原路回。绝对不深穿无人区。' },
-          { time: '12:00', desc: '午饭就在 <b>红柳滩游客服务点</b> 吃自带路餐。' },
-          { time: '13:30', desc: '13:30 准时开始返程。' },
-          { time: '18:00', desc: '18:00-18:30 安全回到哈密市区。' },
-          { time: '19:00', desc: '晚餐吃 <b>兴江抓饭肉汤馆(光明路店)</b>。这顿就吃：抓饭 + 热汤，别再加重口，保护好胃部。' }
+          { time: '09:30', desc: '从住处出发前往 <b>葡萄沟景区</b>。' },
+          { time: '10:00-12:50', desc: '逛 <b>葡萄沟</b>。玩法固定：葡萄架长廊下散步 -> 阴凉处慢走避暑 -> 领略维吾尔民居风情 -> 孩子轻松走。' },
+          { time: '13:00-14:00', desc: '午饭享用 <b>葡萄沟阿迪力快餐厅</b>。' },
+          { time: '14:10-15:30', desc: '在景区内的茶座或葡萄藤阴凉处午休歇息。' },
+          { time: '15:30-17:00', desc: '下午继续慢逛，或者直接乘车返回市区酒店内休息。' },
+          { time: '18:30-19:40', desc: '晚餐前往 <b>丝路餐厅</b> 享用。' },
+          { time: '20:00', desc: '返回住处休息。' }
         ],
-        tips: '<b>极度重要：</b> 这一天是全程最累的一天。如果当天风沙大、地面松软，车辆到达红柳滩即刻折返，绝不能硬往深处开。车上必须备足路餐与大量水。'
+        tips: '这一天仅留给葡萄沟，不再安排其他任何收费景点，享受绿洲的清爽与宁静。'
       },
       {
         day: 'D6',
-        title: '哈密 -> 乌鲁木齐 (长途转场) + 和田二街',
-        distance: '600 km',
-        duration: '行车约 8 小时',
-        locations: ['hami_hotel', 'tuyugou', 'hanyou_hotel', 'hetian_restaurant', 'hanyou_hotel', 'hetiandao', 'hanyou_hotel'],
+        title: '吐鲁番 -> 乌鲁木齐 (老城与大巴扎线)',
+        distance: '190 km',
+        duration: '行车约 3 小时',
+        locations: ['turpan_hotel', 'yangcun_museum', 'xinjiang_museum', 'jinquan_mall', 'bazaar', 'hetian_restaurant', 'hetiandao', 'hanyou_hotel'],
         schedule: [
-          { time: '08:00', desc: '早上 08:00 从哈密出发，走 G30 连霍高速前往乌鲁木齐。' },
-          { time: '12:00', desc: '抵达 G30 <b>吐峪沟服务区</b> 吃午饭。午饭固定：服务区简餐 + 孩子酸奶。' },
-          { time: '17:00', desc: '下午 17:00 抵达乌鲁木齐市区，入住 <b>汉友酒店(乌鲁木齐铁路局店)</b> 办理手续。' },
-          { time: '18:30', desc: '晚餐吃 <b>和阗玫瑰抓饭(总店)</b>。这顿固定点：原始抓饭/羊排抓饭 + 酸奶。' },
-          { time: '20:00', desc: '20:00 前往 <b>和田二街</b> 扫街，20:00-21:00 只逛，不买大件。' },
-          { time: '21:00', desc: '回住处休息缓路。' }
+          { time: '08:30', desc: '从吐鲁番出发前往乌鲁木齐，翻越风力发电区。' },
+          { time: '12:00-13:00', desc: '抵达乌鲁木齐，午饭吃 <b>相约·杨村小馆(博物馆店)</b>。' },
+          { time: '13:30-15:30', desc: '逛 <b>新疆维吾尔自治区博物馆</b>，探秘历史文物与干尸陈列。' },
+          { time: '15:30-16:00', desc: '开车前往 <b>金泉商城(解放南路店)</b>。' },
+          { time: '16:00-17:00', desc: '逛 <b>金泉商城</b>。这里主要买：小首饰、小包、民族风小物、文创小件。' },
+          { time: '17:10-18:40', desc: '逛 <b>新疆国际大巴扎</b>。这里主要买：干果、披肩、民族服饰、铜器、小礼物。' },
+          { time: '19:00-19:50', desc: '晚饭吃 <b>和阗玫瑰抓饭(总店)</b>。' },
+          { time: '20:00-21:00', desc: '去 <b>和田二街</b> 慢行散步收尾，感受烟火气，不买大件。' },
+          { time: '21:10', desc: '返回乌鲁木齐住处/酒店休息。' }
         ],
-        tips: '长途转场，横风常见，双手握稳方向盘，控制车速。乌鲁木齐晚上凉爽（18-26°C），注意给孩子多添一件外套。'
+        tips: '今天集中了首府的市区经典人文线。大巴扎采购干果时可支持商家直接快递打包发送回酒泉，减轻后续行李负担。'
       },
       {
         day: 'D7',
-        title: '天山天池日 (碧水雪峰最稳线)',
+        title: '乌鲁木齐第2天：天山天池',
         distance: '220 km (往返)',
         duration: '行车单程约 1.5 小时',
-        locations: ['hanyou_hotel', 'tianchi_center', 'tianchi_lake', 'tianchi_center', 'hanyou_hotel'],
+        locations: ['hanyou_hotel', 'tianchi_center', 'tianchi_lake', 'tianchi_center', 'mafenghua_restaurant', 'hanyou_hotel'],
         schedule: [
-          { time: '08:00', desc: '从住处出发去 <b>天山天池游客服务中心</b>，车程按 1.5 小时左右算。' },
-          { time: '09:30', desc: '09:30 抵达游客中心，泊车。' },
-          { time: '10:00', desc: '10:00-13:00 玩天池主湖区。玩法固定：游客中心 -> 区间车 -> 主湖区 -> 湖边拍照 -> 原路回。不上长线，不上马牙山，确保体力充足。' },
-          { time: '13:10', desc: '午饭在 <b>天山天池游客服务中心餐饮区</b> 吃快餐。' },
-          { time: '14:00', desc: '起程返回乌鲁木齐。' },
-          { time: '16:00', desc: '16:00-17:00 回到住处彻底午休休息。' },
-          { time: '18:30', desc: '晚餐时间。晚餐自由，不强加新店，就近就餐。' },
-          { time: '19:30', desc: '如果体力还行，可以在住处附近带老人孩子散散步，随后回房休息。' }
+          { time: '08:00', desc: '从住处出发去 <b>天山天池游客服务中心</b>。' },
+          { time: '09:30', desc: '到达游客服务中心，泊车。' },
+          { time: '10:00-13:20', desc: '游览 <b>天山天池主湖区</b>。玩法固定：景区区间车 -> 主湖区木栈道 -> 湖边漫步拍照 -> 原路返回，不上长线，不上马牙山。' },
+          { time: '13:30-14:20', desc: '在天池游客服务中心餐饮区吃午饭。' },
+          { time: '14:30-16:30', desc: '起程返回乌鲁木齐。' },
+          { time: '17:30-18:30', desc: '回到住处小憩或热水澡休整。' },
+          { time: '18:40-20:00', desc: '晚餐享用 <b>马风花大盘鸡</b>。固定点：大盘鸡 + 皮带面。' },
+          { time: '20:20', desc: '返回住处休息。' }
         ],
-        tips: '天池湖边海拔约 1900 米，风大凉爽，老人和小孩下区间车后必须穿防风外套，带上保温杯喝热水。'
+        tips: '天池海拔较高，湖畔气温偏低，下区间车后老人小孩务必穿上保暖防风外套，避免受凉。'
       },
       {
         day: 'D8',
-        title: '乌鲁木齐市区线：新疆博物馆 + 红山公园 + 水磨沟公园',
-        distance: '市区约 30 km',
-        duration: '行车约 1.5 小时',
-        locations: ['hanyou_hotel', 'xinjiang_museum', 'yangcun_museum', 'hanyou_hotel', 'hongshan_park', 'water_temple', 'hanyou_hotel'],
-        schedule: [
-          { time: '09:30', desc: '去 <b>新疆维吾尔自治区博物馆</b>。' },
-          { time: '10:00-12:00', desc: '逛博物馆。' },
-          { time: '12:10', desc: '午饭吃 <b>相约·羊村小馆(新疆博物馆店)</b>。这顿固定点：手抓肉/烤包子/家常新疆菜。' },
-          { time: '13:30-14:30', desc: '短休息。' },
-          { time: '15:00', desc: '去 <b>红山公园</b>。' },
-          { time: '15:00-16:20', desc: '红山公园只走主观景线，不爬太多。' },
-          { time: '16:40', desc: '去 <b>水磨沟公园</b>。' },
-          { time: '16:40-18:00', desc: '在水磨沟公园慢走。' },
-          { time: '18:30', desc: '回住处休息。' }
-        ],
-        tips: '新疆博物馆需要提前实名预约。红山公园建议租借轮椅以减轻老人负担。水磨沟的泉水常年不冻，可以陪宝宝看红色锦鲤。'
-      },
-      {
-        day: 'D9',
-        title: '天山大峡谷日 (高山松林牧野)',
-        distance: '160 km (往返)',
-        duration: '行车单程约 1.2 小时',
-        locations: ['hanyou_hotel', 'grand_canyon', 'grand_canyon_restaurant', 'hanyou_hotel', 'mafenghua_restaurant', 'hanyou_hotel'],
-        schedule: [
-          { time: '08:00', desc: '从住处去 <b>天山大峡谷景区游客中心</b>，车程按 1 小时 - 1.5 小时算。' },
-          { time: '09:30', desc: '09:30-12:30 玩大峡谷主线。玩法固定：游客中心 -> 主观景点 -> 湖边/栈道 -> 原路回。不走深线，绝对不暴走。' },
-          { time: '12:40', desc: '午饭在 <b>天山大峡谷景区游客中心餐饮区</b> 解决。' },
-          { time: '14:00', desc: '起程返回乌鲁木齐。' },
-          { time: '16:00', desc: '16:00-17:00 回到住处充分午休。' },
-          { time: '18:30', desc: '晚餐去吃 <b>马风花大盘鸡新疆菜</b>。这顿固定点：大盘鸡 + 皮带面。' },
-          { time: '20:00', desc: '吃完饱餐回住处休息。' }
-        ],
-        tips: '大峡谷景区风景宜人，走平缓木栈道即可。不要试图带老人去未开发的野道或高地。'
-      },
-      {
-        day: 'D10',
-        title: '老城购物线：金泉商城 + 国际大巴扎 + 和田二街',
-        distance: '市区约 25 km',
-        duration: '行车约 1 小时',
-        locations: ['hanyou_hotel', 'jinquan_mall', 'bazaar', 'hanyou_hotel', 'hetiandao', 'hanyou_hotel'],
-        schedule: [
-          { time: '10:00', desc: '先去 <b>金泉商城(解放南路店)</b>。' },
-          { time: '10:00-11:30', desc: '在金泉商城买小件。固定买：冰箱贴、小首饰、小包、民族风小物。' },
-          { time: '11:40', desc: '去 <b>新疆国际大巴扎</b>。' },
-          { time: '12:00-13:00', desc: '在 <b>大巴扎美食广场</b> 吃午饭。' },
-          { time: '13:00-16:30', desc: '逛大巴扎。固定路线：先2号楼服饰 -> 再3号楼干果/工艺品 -> 最后步行街。固定买：披肩、民族服饰、干果、铜器、小礼物。' },
-          { time: '17:30', desc: '去 <b>和田二街</b>。' },
-          { time: '17:30-19:30', desc: '和田二街只负责 逛吃收尾，这晚不再塞新店，就在和田二街收尾最顺。' }
-        ],
-        tips: '金泉商城的工艺品讲价空间较大。和田二街小吃极其正宗，晚上人流大，请抓紧宝宝，注意随身物品安全。'
-      },
-      {
-        day: 'D11',
-        title: '乌鲁木齐 -> 哈密 (返程转场)',
+        title: '乌鲁木齐 -> 哈密 (返程大转场)',
         distance: '600 km',
         duration: '行车约 8 小时',
         locations: ['hanyou_hotel', 'tuyugou', 'hami_hotel', 'xingjiang_restaurant', 'hami_hotel'],
         schedule: [
-          { time: '08:00', desc: '早上 08:00 从乌鲁木齐酒店退房，原路返回哈密。' },
-          { time: '12:00', desc: '中午 12:00 抵达 <b>吐峪沟服务区</b> 吃午餐休整。' },
-          { time: '17:00', desc: '下午 17:00 安全回到哈密市区，入住 <b>铂雅精品酒店(哈密火车站店)</b>。' },
-          { time: '18:30', desc: '晚餐三选一收尾：兴江抓饭肉汤馆(光明路店) / 驿楼兰·新疆菜(火车站店) / 青禾小厨(新民五路店)。建议收尾选 <b>兴江抓饭肉汤馆</b>，吃大盘热汤和抓饭，最省脑子。' },
-          { time: '20:00', desc: '吃完回酒店休息，整理返程行李。' }
+          { time: '08:00', desc: '早上 08:00 从乌鲁木齐退房出发，原路沿 G30 高速回哈密。' },
+          { time: '12:00-12:40', desc: '路上吃午饭，优先在高速服务区快速解决（如吐峪沟服务区）。' },
+          { time: '17:00-18:00', desc: '下午安全回到哈密市区办入住。' },
+          { time: '18:30-19:30', desc: '晚餐可重复吃你们最满意的那家：<b>兴江抓饭肉汤馆</b> 或 <b>驿楼兰</b>。' },
+          { time: '20:30', desc: '回酒店休息，早点洗漱睡。' }
         ],
-        tips: '返程路途漫长，行车保持警惕。下午抵达哈密市区比较炎热，先回酒店洗个热水澡避暑。'
+        tips: '返程路程较长，百里风区注意横风。带好保温杯和零食，让孩子在安全座椅内保持适度舒适。'
       },
       {
-        day: 'D12',
-        title: '哈密 -> 酒泉 (安全归家)',
+        day: 'D9',
+        title: '哈密 -> 酒泉 (温馨归家)',
         distance: '625 km',
         duration: '行车约 7.5 小时',
         locations: ['hami_hotel', 'liuyuan', 'jiuquan'],
         schedule: [
-          { time: '08:00', desc: '早上 08:00 从哈密住处出发回酒泉。' },
-          { time: '12:00', desc: '中午 12:00 抵达 <b>柳园服务区</b> 吃简易午餐。' },
-          { time: '16:00', desc: '下午 16:00 左右安全抵达甘肃酒泉，圆满结束本次舒缓自驾旅程。' }
+          { time: '08:00', desc: '从哈密出发返回酒泉。' },
+          { time: '12:00-12:40', desc: '中午在 <b>柳园服务区</b> 吃简单的午餐。' },
+          { time: '15:30-16:30', desc: '下午安全回到甘肃酒泉，行程完美结束！' }
         ],
-        tips: '出疆需要通过安检，备好身份证件。到家后多休息，建议将车辆做一次彻底的洗车和空调滤芯清理。'
+        tips: '出疆星星峡及进甘安检排队时，备齐所有人身份证。回家后注意洗车和清理空气滤芯风沙。'
       }
     ];
 
@@ -1570,7 +1518,7 @@
       }
     ];
 
-    let currentTab = 12; // Default to 12 days
+    let currentTab = 9; // Default to 9 days
     let map;
     let markers = {};
     let routePolyline;
@@ -1582,7 +1530,7 @@
     function initMap() {
       map = L.map('map', {
         zoomControl: false
-      }).setView([42.2, 92.5], 6);
+      }).setView([42.2, 90.5], 6); // Set center to include Shanshan / Turpan corridor
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -1630,7 +1578,7 @@
       }
       markers = {};
 
-      const stays = ['jiuquan', 'hami_hotel', 'hanyou_hotel', 'hami', 'urumqi'];
+      const stays = ['jiuquan', 'hami_hotel', 'shanshan_hotel', 'turpan_hotel', 'hanyou_hotel', 'hami', 'urumqi'];
 
       for (let key in locations) {
         const loc = locations[key];
@@ -1665,7 +1613,7 @@
       }
 
       const mainSpineKeys = [
-        'jiuquan', 'liuyuan', 'xingxingxia', 'hami_hotel', 'tuyugou', 'hanyou_hotel', 'tianchi'
+        'jiuquan', 'liuyuan', 'xingxingxia', 'hami_hotel', 'shanshan_hotel', 'turpan_hotel', 'hanyou_hotel', 'tianchi'
       ];
       
       const spinePoints = mainSpineKeys.map(k => locations[k].coords);
@@ -1708,24 +1656,24 @@
       }).addTo(map);
     }
 
-    // Switch between 12-day and 7-day timelines
+    // Switch between 9-day and 7-day timelines
     function switchRoutePlan(days) {
       currentTab = days;
-      const btn12 = document.getElementById('btn-tab-12');
+      const btn9 = document.getElementById('btn-tab-9');
       const btn7 = document.getElementById('btn-tab-7');
-      if (btn12) btn12.classList.toggle('active', days === 12);
+      if (btn9) btn9.classList.toggle('active', days === 9);
       if (btn7) btn7.classList.toggle('active', days === 7);
       
       // Update calculator distance estimation
-      const totalDist = days === 12 ? 3800 : 2500;
+      const totalDist = days === 9 ? 2800 : 2500;
       document.getElementById('calc-miles').innerText = totalDist + ' km';
       calculateCosts();
 
       // Update badges
       const badgePlanName = document.getElementById('badge-plan-name');
       const badgePlanMiles = document.getElementById('badge-plan-miles');
-      if (badgePlanName) badgePlanName.innerText = days === 12 ? '12天11晚 深度执行版' : '7天6晚 舒适经典版';
-      if (badgePlanMiles) badgePlanMiles.innerText = days === 12 ? '约 3,800 km' : '约 2,500 km';
+      if (badgePlanName) badgePlanName.innerText = days === 9 ? '9天8晚 完整路线版' : '7天6晚 舒适经典版';
+      if (badgePlanMiles) badgePlanMiles.innerText = days === 9 ? '约 2,800 km' : '约 2,500 km';
 
       renderTimeline();
       setActiveDay(0);
@@ -1736,7 +1684,7 @@
       const container = document.getElementById('timeline-container');
       container.innerHTML = '';
       
-      const activeItinerary = currentTab === 12 ? itinerary12Days : itinerary7Days;
+      const activeItinerary = currentTab === 9 ? itinerary9Days : itinerary7Days;
 
       activeItinerary.forEach((item, index) => {
         const div = document.createElement('div');
@@ -1745,7 +1693,7 @@
         div.onclick = () => setActiveDay(index);
 
         let detailSectionHtml = '';
-        if (currentTab === 12 && item.schedule) {
+        if (currentTab === 9 && item.schedule) {
           detailSectionHtml = `
             <div class="detail-section">
               <div class="detail-label">
@@ -1814,14 +1762,14 @@
     // Set Active Day and Sync with Map view
     function setActiveDay(index) {
       activeDayIndex = index;
-      const activeItinerary = currentTab === 12 ? itinerary12Days : itinerary7Days;
+      const activeItinerary = currentTab === 9 ? itinerary9Days : itinerary7Days;
       const currentDayData = activeItinerary[index];
 
       document.querySelectorAll('.timeline-item').forEach((item, idx) => {
         item.classList.toggle('active', idx === index);
       });
 
-      const stays = ['jiuquan', 'hami_hotel', 'hanyou_hotel', 'hami', 'urumqi'];
+      const stays = ['jiuquan', 'hami_hotel', 'shanshan_hotel', 'turpan_hotel', 'hanyou_hotel', 'hami', 'urumqi'];
       for (let key in markers) {
         let type = stays.includes(key) ? 'stay' : 'sight';
         const isCurrentLoc = currentDayData.locations.includes(key);
@@ -1857,7 +1805,7 @@
     function calculateCosts() {
       const fuelRate = parseFloat(document.getElementById('fuel-rate').value) || 0;
       const fuelPrice = parseFloat(document.getElementById('fuel-price').value) || 0;
-      const dist = currentTab === 12 ? 3800 : 2500;
+      const dist = currentTab === 9 ? 2800 : 2500;
 
       const totalFuelCost = Math.round((dist / 100) * fuelRate * fuelPrice);
       const totalTollCost = Math.round(dist * 0.43);
@@ -1920,7 +1868,7 @@
     // Page Load Setup
     window.onload = () => {
       initMap();
-      switchRoutePlan(12); // default comfortable 12 days itinerary
+      switchRoutePlan(9); // default 9 days itinerary
       loadChecklists();
     };
   </script>
