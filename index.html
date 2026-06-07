@@ -417,12 +417,26 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .right-panel.collapsed {
-      width: 0;
-      padding: 0;
-      border-left: none;
-      opacity: 0;
-      overflow: hidden;
+      width: 0 !important;
+      padding: 0 !important;
+      border-left: none !important;
+      opacity: 0 !important;
+      overflow: hidden !important;
       pointer-events: none;
+    }
+    .right-panel.collapsed > * {
+      display: none !important;
+    }
+
+    /* Active day path marching ants animation */
+    .active-route-line {
+      stroke-dasharray: 8, 8;
+      animation: activeRouteDash 25s linear infinite;
+    }
+    @keyframes activeRouteDash {
+      to {
+        stroke-dashoffset: -1000;
+      }
     }
 
     /* Weather Comparison Widget */
@@ -1237,14 +1251,14 @@
       hami_museum: { name: '哈密博物馆', coords: [42.8306, 93.5147], desc: '哈密市博物馆，看哈密瓜史与历史文物' },
       mukamu: { name: '木卡姆传承中心', coords: [42.8302, 93.518], desc: '哈密木卡姆传承中心，非遗文化展示' },
       qinghe_kitchen: { name: '青禾小厨', coords: [42.8288, 93.5012], desc: '特色中餐馆 (新民五路店)' },
-      aleten_street: { name: '阿勒屯古街', coords: [42.809, 93.520], desc: '非遗文化街区，手工艺品与特产采买区' },
+      aleten_street: { name: '阿勒屯古街', coords: [42.809, 93.520], desc: '非遗文化街区，手工艺品与特产采买区', thumbnail: 'assets/aleten.png' },
       yiloulan_restaurant: { name: '驿楼兰·新疆菜', coords: [42.8115, 93.5041], desc: '特色新疆菜 (火车站店)' },
       
       // Attractions with generated visual assets
       balikun_lake: { name: '巴里坤湖', coords: [43.66, 92.80], desc: '高原咸水湖，清凉宁静', thumbnail: 'assets/balikun.png' },
       balikun_restaurant: { name: '巴里坤文博园餐厅', coords: [43.601, 93.023], desc: '巴里坤县城就餐点' },
       balikun_grass: { name: '巴里坤草原', coords: [43.60, 93.00], desc: '高山草场，适合老人孩子漫步吸氧', thumbnail: 'assets/balikun.png' },
-      huancai_lake: { name: '幻彩湖', coords: [43.10, 94.18], desc: '会随天气变色的粉红盐湖', thumbnail: 'assets/balikun.png' }, // using lake theme
+      huancai_lake: { name: '幻彩湖', coords: [43.10, 94.18], desc: '会随天气变色的粉红盐湖', thumbnail: 'assets/huancai.png' },
       yanchi_restaurant: { name: '盐池镇鸿福饭庄', coords: [43.15, 94.22], desc: '盐池镇午餐补给点' },
       shazaoquan: { name: '沙枣泉出口', coords: [42.50, 93.10], desc: 'G30大海道出口' },
       dahaidao_east: { name: '大海道东门', coords: [42.22, 93.12], desc: '大海道东门游客中心' },
@@ -1253,18 +1267,18 @@
       tuyugou: { name: '吐峪沟服务区', coords: [42.85, 89.69], desc: 'G30高速吐鲁番段服务区，回程补给点' },
       hanyou_hotel: { name: '汉友酒店', coords: [43.8745, 87.5752], desc: '乌鲁木齐下榻酒店 (乌鲁木齐铁路局店)' },
       hetian_restaurant: { name: '和阗玫瑰抓饭', coords: [43.8795, 87.5702], desc: '抓饭总店 (原始/羊排抓饭)' },
-      xinjiang_museum: { name: '新疆博物馆', coords: [43.824, 87.586], desc: '新疆维吾尔自治区博物馆，历史与干尸展' },
+      xinjiang_museum: { name: '新疆博物馆', coords: [43.824, 87.586], desc: '新疆维吾尔自治区博物馆，历史与干尸展', thumbnail: 'assets/museum.png' },
       yangcun_museum: { name: '相约·羊村小馆(博物馆店)', coords: [43.8255, 87.5855], desc: '午餐就餐点 (新疆博物馆旁)' },
       hongshan_park: { name: '红山公园', coords: [43.812, 87.608], desc: '市区地标公园，俯瞰全市与博格达雪峰' },
       mafenghua_restaurant: { name: '马风花大盘鸡新疆菜', coords: [43.834, 87.596], desc: '地道大盘鸡皮带面餐馆' },
       tianchi_center: { name: '天池游客中心', coords: [43.985, 88.136], desc: '天山天池游客服务中心及快餐区' },
       tianchi_lake: { name: '天池主湖区', coords: [43.90, 88.13], desc: '雪山碧湖，定海神针与湖畔步道', thumbnail: 'assets/tianchi.png' },
       yangcun_beijingrd: { name: '相约·羊村小馆(北京路店)', coords: [43.869, 87.576], desc: '晚餐就餐点 (顺路酒店)' },
-      grand_canyon: { name: '天山大峡谷', coords: [43.45, 87.45], desc: '国家5A景区，雪山、松林、峡谷主线' },
+      grand_canyon: { name: '天山大峡谷', coords: [43.45, 87.45], desc: '国家5A景区，雪山、松林、峡谷主线', thumbnail: 'assets/canyon.png' },
       grand_canyon_restaurant: { name: '天山大峡谷游客中心餐厅', coords: [43.43, 87.43], desc: '大峡谷景区午餐补给点' },
       water_temple: { name: '水磨沟公园', coords: [43.81, 87.63], desc: '市区清凉避暑公园，泉水温暖鱼群多' },
       jinquan_mall: { name: '金泉商城', coords: [43.784, 87.616], desc: '手工艺品与民族特色文创采买地' },
-      bazaar: { name: '新疆国际大巴扎', coords: [43.779, 87.612], desc: '西域风情步行街，采买干果与伴手礼', thumbnail: 'assets/tianchi.png' }, // bazaar theme
+      bazaar: { name: '新疆国际大巴扎', coords: [43.779, 87.612], desc: '西域风情步行街，采买干果与伴手礼', thumbnail: 'assets/bazaar.png' }, // bazaar theme
       hetiandao: { name: '和田二街', coords: [43.79, 87.59], desc: '乌鲁木齐地道小吃美食街 (烤包子/烤肉/酸奶)' }
     };
 
@@ -1400,14 +1414,15 @@
         duration: '行车约 1.5 小时',
         locations: ['hanyou_hotel', 'xinjiang_museum', 'yangcun_museum', 'hanyou_hotel', 'hongshan_park', 'water_temple', 'hanyou_hotel'],
         schedule: [
-          { time: '09:30', desc: '从酒店出发去 <b>新疆维吾尔自治区博物馆</b>。' },
-          { time: '10:00', desc: '10:00-12:00 逛博物馆。重点看丝绸之路展与干尸特展，不强行逛完。' },
-          { time: '12:10', desc: '午餐吃 <b>相约·羊村小馆(新疆博物馆店)</b>。这顿固定点：手抓肉/烤包子/家常新疆菜。' },
-          { time: '13:30', desc: '13:30-14:30 返回住处短休息。' },
-          { time: '15:00', desc: '去 <b>红山公园</b>。15:00-16:20 逛红山公园，只走主观景线，乘坐景区车登顶，绝不爬过多台阶。' },
+          { time: '09:30', desc: '去 <b>新疆维吾尔自治区博物馆</b>。' },
+          { time: '10:00-12:00', desc: '逛博物馆。' },
+          { time: '12:10', desc: '午饭吃 <b>相约·羊村小馆(新疆博物馆店)</b>。这顿固定点：手抓肉/烤包子/家常新疆菜。' },
+          { time: '13:30-14:30', desc: '短休息。' },
+          { time: '15:00', desc: '去 <b>红山公园</b>。' },
+          { time: '15:00-16:20', desc: '红山公园只走主观景线，不爬太多。' },
           { time: '16:40', desc: '去 <b>水磨沟公园</b>。' },
-          { time: '16:40', desc: '16:40-18:00 在水磨沟公园散步慢走，这里泉水长流，绿化遮阳极度舒适。' },
-          { time: '18:30', desc: '回到住处休息。' }
+          { time: '16:40-18:00', desc: '在水磨沟公园慢走。' },
+          { time: '18:30', desc: '回住处休息。' }
         ],
         tips: '新疆博物馆需要提前实名预约。红山公园建议租借轮椅以减轻老人负担。水磨沟的泉水常年不冻，可以陪宝宝看红色锦鲤。'
       },
@@ -1435,13 +1450,13 @@
         duration: '行车约 1 小时',
         locations: ['hanyou_hotel', 'jinquan_mall', 'bazaar', 'hanyou_hotel', 'hetiandao', 'hanyou_hotel'],
         schedule: [
-          { time: '10:00', desc: '首站前往 <b>金泉商城(解放南路店)</b>。10:00-11:30 采购小件，固定买：冰箱贴、小首饰、小包、民族风小物（价格公道划算）。' },
+          { time: '10:00', desc: '先去 <b>金泉商城(解放南路店)</b>。' },
+          { time: '10:00-11:30', desc: '在金泉商城买小件。固定买：冰箱贴、小首饰、小包、民族风小物。' },
           { time: '11:40', desc: '去 <b>新疆国际大巴扎</b>。' },
-          { time: '12:00', desc: '12:00-13:00 在 <b>大巴扎美食广场</b> 享用特色午餐。' },
-          { time: '13:00', desc: '13:00-16:30 逛大巴扎。固定路线：先2号楼服饰 -> 再3号楼干果/工艺品 -> 最后步行街。固定买：披肩、民族服饰、干果、铜器、小礼物。' },
-          { time: '16:30', desc: '回酒店稍作午休（也可在大巴扎打包好特产直接快递寄出）。' },
-          { time: '17:30', desc: '17:30-19:30 去 <b>和田二街</b>。和田二街只负责 <b>逛吃收尾</b>。' },
-          { time: '19:30', desc: '今晚不再去饭馆吃正餐，就在和田二街吃小吃（烤包子、烤羊肉、手工酸奶、烤馕）直接结束，吃饱回酒店。' }
+          { time: '12:00-13:00', desc: '在 <b>大巴扎美食广场</b> 吃午饭。' },
+          { time: '13:00-16:30', desc: '逛大巴扎。固定路线：先2号楼服饰 -> 再3号楼干果/工艺品 -> 最后步行街。固定买：披肩、民族服饰、干果、铜器、小礼物。' },
+          { time: '17:30', desc: '去 <b>和田二街</b>。' },
+          { time: '17:30-19:30', desc: '和田二街只负责 逛吃收尾，这晚不再塞新店，就在和田二街收尾最顺。' }
         ],
         tips: '金泉商城的工艺品讲价空间较大。和田二街小吃极其正宗，晚上人流大，请抓紧宝宝，注意随身物品安全。'
       },
@@ -1689,7 +1704,7 @@
         weight: 4,
         opacity: 0.9,
         lineJoin: 'round',
-        dashArray: '3, 3'
+        className: 'active-route-line'
       }).addTo(map);
     }
 
