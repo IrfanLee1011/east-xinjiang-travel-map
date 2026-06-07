@@ -155,11 +155,12 @@
 
     /* Main Dashboard Grid */
     .dashboard-container {
-      display: grid;
-      grid-template-columns: 380px 1fr 380px;
+      display: flex;
+      flex-direction: row;
       flex-grow: 1;
       height: calc(100vh - 76px);
       min-height: 600px;
+      overflow: hidden;
     }
 
     /* Common Card Styling (Glassmorphism) */
@@ -180,6 +181,8 @@
 
     /* Left Panel: Itinerary Planner */
     .left-panel {
+      width: 380px;
+      flex-shrink: 0;
       border-right: 1px solid var(--border-glass);
       display: flex;
       flex-direction: column;
@@ -353,9 +356,10 @@
 
     /* Central Map View */
     .map-container-wrapper {
-      position: relative;
+      flex-grow: 1;
       height: 100%;
-      width: 100%;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -400,6 +404,8 @@
 
     /* Right Panel: Weather, Safety & Checklists */
     .right-panel {
+      width: 380px;
+      flex-shrink: 0;
       border-left: 1px solid var(--border-glass);
       display: flex;
       flex-direction: column;
@@ -408,6 +414,15 @@
       overflow-y: auto;
       height: 100%;
       background: rgba(7, 11, 25, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .right-panel.collapsed {
+      width: 0;
+      padding: 0;
+      border-left: none;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
     }
 
     /* Weather Comparison Widget */
@@ -648,15 +663,17 @@
 
     /* Responsive adjustments */
     @media (max-width: 1200px) {
-      .dashboard-container {
-        grid-template-columns: 320px 1fr 320px;
+      .left-panel {
+        width: 320px;
+      }
+      .right-panel {
+        width: 320px;
       }
     }
 
     @media (max-width: 992px) {
       .dashboard-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 400px auto;
+        flex-direction: column;
         height: auto;
         overflow-y: auto;
       }
@@ -668,12 +685,24 @@
       }
 
       .left-panel, .right-panel {
+        width: 100% !important;
         height: 500px;
+        flex-shrink: 0;
         border: none;
       }
+      .right-panel.collapsed {
+        height: 0;
+        padding: 0;
+        opacity: 0;
+        overflow: hidden;
+      }
 
-      #map {
+      .map-container-wrapper {
         height: 400px;
+        width: 100%;
+      }
+      .toggle-sidebar-btn {
+        display: none !important;
       }
     }
 
@@ -728,6 +757,108 @@
     .recommend-desc {
       color: var(--text-muted);
       margin-top: 0.1rem;
+    }
+
+    /* Collapsible Toggle Button styling */
+    .toggle-sidebar-btn {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      z-index: 1000;
+      background: rgba(16, 22, 47, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      border-right: none;
+      color: var(--color-primary);
+      width: 20px;
+      height: 70px;
+      border-radius: 8px 0 0 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -4px 0 16px rgba(0, 0, 0, 0.4);
+    }
+    .toggle-sidebar-btn:hover {
+      color: #fff;
+      background: rgba(22, 32, 69, 0.95);
+      border-color: var(--color-secondary);
+      box-shadow: -4px 0 20px rgba(14, 165, 233, 0.3);
+    }
+    .toggle-sidebar-btn span {
+      font-size: 0.75rem;
+      display: inline-block;
+      user-select: none;
+    }
+
+    /* Hour-by-hour schedule list styling */
+    .hour-schedule {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      padding-left: 0.6rem;
+      border-left: 1px dashed var(--border-glass);
+    }
+    .schedule-node {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      position: relative;
+    }
+    .schedule-node::before {
+      content: '';
+      position: absolute;
+      left: -11px;
+      top: 5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+    .node-time {
+      font-weight: 700;
+      color: var(--color-primary);
+      width: 45px;
+      flex-shrink: 0;
+    }
+    .node-desc {
+      color: var(--text-main);
+    }
+
+    /* Visual Image-based custom map markers */
+    .image-marker {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--color-accent);
+      background: var(--bg-dark);
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -19px 0 0 -19px;
+    }
+    .image-marker img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .image-marker.active {
+      transform: scale(1.3);
+      border-color: #fff;
+      box-shadow: 0 0 15px var(--color-secondary);
+      z-index: 1000;
     }
   </style>
 </head>
@@ -793,6 +924,9 @@
     <!-- Central Map View -->
     <div class="map-container-wrapper">
       <div id="map"></div>
+      <button id="toggle-right-panel" class="toggle-sidebar-btn" onclick="toggleRightPanel()">
+        <span id="toggle-icon">▶</span>
+      </button>
       
       <!-- Map Glass Overlay Card -->
       <div class="glass-panel map-overlay-card">
@@ -1102,18 +1236,20 @@
       xingjiang_restaurant: { name: '兴江抓饭肉汤馆', coords: [42.8258, 93.5135], desc: '晚饭就餐点 (光明路店)' },
       hami_museum: { name: '哈密博物馆', coords: [42.8306, 93.5147], desc: '哈密市博物馆，看哈密瓜史与历史文物' },
       mukamu: { name: '木卡姆传承中心', coords: [42.8302, 93.518], desc: '哈密木卡姆传承中心，非遗文化展示' },
-      qinghe_kitchen: { name: '青禾小厨', coords: [42.8288, 93.5012], desc: '特色中餐馆 (大盘鸡/时蔬/拌面)' },
+      qinghe_kitchen: { name: '青禾小厨', coords: [42.8288, 93.5012], desc: '特色中餐馆 (新民五路店)' },
       aleten_street: { name: '阿勒屯古街', coords: [42.809, 93.520], desc: '非遗文化街区，手工艺品与特产采买区' },
       yiloulan_restaurant: { name: '驿楼兰·新疆菜', coords: [42.8115, 93.5041], desc: '特色新疆菜 (火车站店)' },
-      balikun_lake: { name: '巴里坤湖', coords: [43.66, 92.80], desc: '高原咸水湖，清凉宁静' },
+      
+      // Attractions with generated visual assets
+      balikun_lake: { name: '巴里坤湖', coords: [43.66, 92.80], desc: '高原咸水湖，清凉宁静', thumbnail: 'assets/balikun.png' },
       balikun_restaurant: { name: '巴里坤文博园餐厅', coords: [43.601, 93.023], desc: '巴里坤县城就餐点' },
-      balikun_grass: { name: '巴里坤草原', coords: [43.60, 93.00], desc: '高山草场，适合老人孩子漫步吸氧' },
-      huancai_lake: { name: '幻彩湖', coords: [43.10, 94.18], desc: '会随天气变色的粉红盐湖' },
+      balikun_grass: { name: '巴里坤草原', coords: [43.60, 93.00], desc: '高山草场，适合老人孩子漫步吸氧', thumbnail: 'assets/balikun.png' },
+      huancai_lake: { name: '幻彩湖', coords: [43.10, 94.18], desc: '会随天气变色的粉红盐湖', thumbnail: 'assets/balikun.png' }, // using lake theme
       yanchi_restaurant: { name: '盐池镇鸿福饭庄', coords: [43.15, 94.22], desc: '盐池镇午餐补给点' },
       shazaoquan: { name: '沙枣泉出口', coords: [42.50, 93.10], desc: 'G30大海道出口' },
       dahaidao_east: { name: '大海道东门', coords: [42.22, 93.12], desc: '大海道东门游客中心' },
-      dahaidao_red: { name: '红柳滩游客服务中心', coords: [42.15, 92.95], desc: '大海道内部最稳补给点' },
-      dahaidao_line: { name: '大海道常规线', coords: [42.20, 92.90], desc: '常规观景线 (严禁驶离公路)' },
+      dahaidao_red: { name: '红柳滩游客服务中心', coords: [42.15, 92.95], desc: '大海道内部最稳补给点', thumbnail: 'assets/dahaidao.png' },
+      dahaidao_line: { name: '大海道常规线', coords: [42.20, 92.90], desc: '常规观景线 (严禁驶离公路)', thumbnail: 'assets/dahaidao.png' },
       tuyugou: { name: '吐峪沟服务区', coords: [42.85, 89.69], desc: 'G30高速吐鲁番段服务区，回程补给点' },
       hanyou_hotel: { name: '汉友酒店', coords: [43.8745, 87.5752], desc: '乌鲁木齐下榻酒店 (乌鲁木齐铁路局店)' },
       hetian_restaurant: { name: '和阗玫瑰抓饭', coords: [43.8795, 87.5702], desc: '抓饭总店 (原始/羊排抓饭)' },
@@ -1122,13 +1258,13 @@
       hongshan_park: { name: '红山公园', coords: [43.812, 87.608], desc: '市区地标公园，俯瞰全市与博格达雪峰' },
       mafenghua_restaurant: { name: '马风花大盘鸡新疆菜', coords: [43.834, 87.596], desc: '地道大盘鸡皮带面餐馆' },
       tianchi_center: { name: '天池游客中心', coords: [43.985, 88.136], desc: '天山天池游客服务中心及快餐区' },
-      tianchi_lake: { name: '天池主湖区', coords: [43.90, 88.13], desc: '雪山碧湖，定海神针与湖畔步道' },
+      tianchi_lake: { name: '天池主湖区', coords: [43.90, 88.13], desc: '雪山碧湖，定海神针与湖畔步道', thumbnail: 'assets/tianchi.png' },
       yangcun_beijingrd: { name: '相约·羊村小馆(北京路店)', coords: [43.869, 87.576], desc: '晚餐就餐点 (顺路酒店)' },
       grand_canyon: { name: '天山大峡谷', coords: [43.45, 87.45], desc: '国家5A景区，雪山、松林、峡谷主线' },
       grand_canyon_restaurant: { name: '天山大峡谷游客中心餐厅', coords: [43.43, 87.43], desc: '大峡谷景区午餐补给点' },
       water_temple: { name: '水磨沟公园', coords: [43.81, 87.63], desc: '市区清凉避暑公园，泉水温暖鱼群多' },
       jinquan_mall: { name: '金泉商城', coords: [43.784, 87.616], desc: '手工艺品与民族特色文创采买地' },
-      bazaar: { name: '新疆国际大巴扎', coords: [43.779, 87.612], desc: '西域风情步行街，采买干果与伴手礼' },
+      bazaar: { name: '新疆国际大巴扎', coords: [43.779, 87.612], desc: '西域风情步行街，采买干果与伴手礼', thumbnail: 'assets/tianchi.png' }, // bazaar theme
       hetiandao: { name: '和田二街', coords: [43.79, 87.59], desc: '乌鲁木齐地道小吃美食街 (烤包子/烤肉/酸奶)' }
     };
 
@@ -1136,135 +1272,206 @@
     const itinerary12Days = [
       {
         day: 'D1',
-        title: '酒泉 -> 哈密 (第一阶段长途转场)',
+        title: '酒泉 -> 哈密市区 (长途转场)',
         distance: '625 km',
-        duration: '正常开约 6.5-7 小时',
+        duration: '行车约 7.5 小时',
         locations: ['jiuquan', 'liuyuan', 'hami_hotel', 'xingjiang_restaurant', 'hami_hotel'],
-        morning: '早上 08:00 从酒泉出发，经 G30 高速一路向西，正常行驶。',
-        afternoon: '中午 12:00 抵达 <b>柳园服务区</b> 吃简单午餐，不下高速折腾。随后通过星星峡安检站进入新疆，约 15:30 抵达哈密办理入住。',
-        evening: '下午 15:30 抵达 <b>铂雅精品酒店(哈密火车站店)</b> 办入住并好好休息。18:00 晚饭吃 <b>兴江抓饭肉汤馆(光明路店)</b>，点抓饭+肉汤+羊肉串。19:30 返回酒店，不安排任何景点，第一天只缓路。',
-        tips: '第一天长途转场只缓路。入疆安检请备好全家人身份证。哈密天气炎热，进房后先开空调。'
+        schedule: [
+          { time: '08:00', desc: '从酒泉出发，走 G30连霍高速，开启第一天转场。' },
+          { time: '12:00', desc: '抵达 <b>柳园服务区</b> 吃午饭。午饭固定：牛肉面/盖饭 + 孩子喝酸奶 + 面包。不下高速折腾。' },
+          { time: '15:30', desc: '抵达哈密市区，入住 <b>铂雅精品酒店(哈密火车站店)</b> 办入住并好好午休。' },
+          { time: '18:00', desc: '晚餐吃 <b>兴江抓饭肉汤馆(光明路店)</b>。这顿固定点：后腱子抓饭 + 肉汤 + 羊肉串。' },
+          { time: '19:30', desc: '返回住处好好休息，第一天只缓路，不安排任何景点。' }
+        ],
+        tips: '今日纯坐车缓路。进哈密前注意排队通过星星峡安检站，准备好所有人身份证。哈密天气炎热，进房前先开启空调。'
       },
       {
         day: 'D2',
-        title: '哈密市博物馆 + 木卡姆 + 阿勒屯古街',
+        title: '哈密市区线：博物馆 + 木卡姆 + 阿勒屯古街',
         distance: '市区约 15 km',
         duration: '行车约 40 分钟',
         locations: ['hami_hotel', 'hami_museum', 'mukamu', 'qinghe_kitchen', 'hami_hotel', 'aleten_street', 'yiloulan_restaurant', 'hami_hotel'],
-        morning: '上午 09:00 出发去 <b>哈密博物馆</b> 参观约 1.5 小时。10:50 步行到旁边的 <b>哈密木卡姆传承中心</b> 参观，这两个点挨着排最顺。',
-        afternoon: '中午 12:20 午饭吃 <b>青禾小厨</b>，点大盘鸡 + 时蔬 + 拌面。14:00 - 16:00 必须回酒店好好午休，避开午后高温晴晒。',
-        evening: '下午 16:40 前往 <b>阿勒屯古街</b>，今天专门负责逛和买。18:30 晚饭在 <b>驿楼兰·新疆菜(火车站店)</b> 享用。20:00 在古街购买特产（葡萄干、哈密瓜干、花帽、刺绣小包、小挂件等）。',
-        tips: '今天行程平缓，阿勒屯古街道路平坦适合婴儿车。建议采购干果直接邮寄回家，省去车上负担。'
+        schedule: [
+          { time: '09:00', desc: '从酒店出发前往 <b>哈密市博物馆</b>。' },
+          { time: '09:10', desc: '09:10-10:40 逛博物馆，了解哈密瓜历史与哈密王府古文物，控制在 1.5 小时。' },
+          { time: '10:45', desc: '步行或短途开车至旁边的 <b>哈密木卡姆传承中心</b>。' },
+          { time: '10:50', desc: '10:50-11:40 参观木卡姆展陈。说明：如果当天刚好有现场演出，就看 30-40 分钟；如果没有，就按展陈参观。' },
+          { time: '12:00', desc: '午餐享用 <b>青禾小厨(新民五路店)</b>。这顿固定点：大盘鸡 + 皮带面/拌面 + 一个青菜。' },
+          { time: '14:00', desc: '14:00-16:00 返回住处午休，避开酷热。' },
+          { time: '16:40', desc: '前往 <b>阿勒屯古街广场</b>。16:40-18:30 逛古街，只做两件事：散步 + 买小东西。' },
+          { time: '18:30', desc: '买葡萄干、哈密瓜干、花帽、刺绣小包、小挂件作为纪念。' },
+          { time: '18:40', desc: '晚餐吃 <b>驿楼兰·新疆菜(火车站店)</b>。这顿固定点：烤包子 + 拉条子 + 烤羊肉串 + 酸奶。' },
+          { time: '20:00', desc: '在古街顺手买好第二天路餐：馕、酸奶、香蕉、矿泉水，买完回住处休息。' }
+        ],
+        tips: '古街非常平坦，适合推婴儿车和散步。这天专门负责逛和买，防晒仍是第一要务。'
       },
       {
         day: 'D3',
-        title: '巴里坤湖 / 草原清凉避暑日',
+        title: '巴里坤湖 / 草原日 (高原碧水与高山草场)',
         distance: '280 km (往返)',
-        duration: '行车单程约 2.5 小时',
+        duration: '行车单程约 2 小时',
         locations: ['hami_hotel', 'balikun_lake', 'balikun_restaurant', 'balikun_grass', 'hami_hotel'],
-        morning: '早上 07:30 从哈密酒店出发，开车约 2.5 小时翻越天山前往 <b>巴里坤湖</b>。10:00 - 12:00 游览湖边和草原边，只做舒缓散步，不做暴走。',
-        afternoon: '中午 12:20 午饭定在 <b>巴里坤文博园餐厅</b>。13:30 - 15:30 前往 <b>巴里坤草原</b> 慢慢走、拍照，让老人坐着看景，幼童在草地安全嬉戏。',
-        evening: '下午 16:00 开始返程。18:30 回到哈密酒店，晚上不再加点，直接就近吃晚饭后在酒店休息。',
-        tips: '巴里坤草原海拔较高，气温比哈密市区凉爽得多。紫外线依旧很强，注意做好防晒并携带薄外套。'
+        schedule: [
+          { time: '07:30', desc: '从哈密市区酒店出发前往 <b>巴里坤湖</b>，自驾车程约 2 小时左右。' },
+          { time: '09:40', desc: '09:40-12:00 游览 <b>巴里坤湖景区</b>。玩法固定：湖边看景 -> 拍照 -> 找阴凉处坐，不做长距离暴走。' },
+          { time: '12:10', desc: '在 <b>巴里坤湖景区停车区</b> 吃昨天买好的路餐。' },
+          { time: '13:00', desc: '13:00-15:30 继续在 <b>巴里坤湖景区南侧草原观景带</b> 活动。说明：这里不用换导航点，巴里坤湖和草原本来就是一条线，老人可在草地休息，幼童可在安全草场玩耍。' },
+          { time: '15:40', desc: '准时返程回哈密。' },
+          { time: '18:00', desc: '回到哈密市区。' },
+          { time: '18:40', desc: '晚餐享用 <b>青禾小厨(新民五路店)</b>。说明：如果昨天更喜欢 <b>驿楼兰</b>，今晚就去重复吃。' },
+          { time: '20:00', desc: '20:00 返回住处洗漱休息。' }
+        ],
+        tips: '巴里坤属于高山草甸，海拔约 1650 米，气温比哈密市区低得多，但紫外线极强，必须做好全身防晒，多带一件防风外套。'
       },
       {
         day: 'D4',
         title: '幻彩湖盐湖色彩日',
         distance: '350 km (往返)',
-        duration: '行车单程约 2.5-3 小时',
-        locations: ['hami_hotel', 'huancai_lake', 'yanchi_restaurant', 'hami_hotel', 'qinghe_kitchen', 'hami_hotel'],
-        morning: '早上 08:00 从酒店出发，前往 <b>幻彩湖景区</b>，正常开车 2.5 - 3 小时。',
-        afternoon: '上午 11:00 - 12:20 游览幻彩湖，只玩观景和拍照，严禁将前驱 SUV 往野地里开。12:30 午餐在 <b>盐池镇鸿福饭庄</b> 享用。13:30 启程返程。',
-        evening: '下午 16:00 回到哈密酒店，躺着休息一会儿。18:30 晚饭继续吃 <b>青禾小厨</b>，或者如果喜欢第一晚的口味，可改回 <b>兴江抓饭肉汤馆</b>。',
-        tips: '幻彩湖是高盐度湖泊，只在铺装步道活动。车上备足饮用水，盐池镇返程较晒。'
+        duration: '行车单程约 2.5 小时',
+        locations: ['hami_hotel', 'huancai_lake', 'yanchi_restaurant', 'hami_hotel', 'yiloulan_restaurant', 'hami_hotel'],
+        schedule: [
+          { time: '08:00', desc: '从哈密市区出发前往 <b>幻彩湖景区</b>。自驾车程按 2 小时 - 2 小时 20 分算。' },
+          { time: '10:20', desc: '10:20-12:00 游览 <b>幻彩湖景区</b>。玩法固定：观景台看湖色 -> 拍照 -> 严禁将前驱 SUV 往野地里开。' },
+          { time: '12:10', desc: '在 <b>幻彩湖景区停车区</b> 吃自带路餐。路餐今天出发前就带好：馕、鸡蛋、酸奶、香蕉、水。' },
+          { time: '13:00', desc: '13:00-15:00 继续看景，15:00 准时起程返程。' },
+          { time: '17:20', desc: '回到哈密市区。' },
+          { time: '18:30', desc: '晚餐在 <b>驿楼兰·新疆菜(火车站店)</b> 享用。' },
+          { time: '20:00', desc: '返回住处。顺手准备明天大海道自驾路餐：水多带、再加面包和小零食，早点休息。' }
+        ],
+        tips: '幻彩湖路况良好，但属于高盐湖区，绝对不要驾车驶离铺装路面！今天盐湖在阳光下变粉，拍照效果最佳。'
       },
       {
         day: 'D5',
-        title: '大海道常规线探秘 (硬核自驾日)',
+        title: '大海道日 (常规游客线自驾)',
         distance: '360 km (往返)',
         duration: '单程行车约 2.5 小时',
         locations: ['hami_hotel', 'shazaoquan', 'dahaidao_east', 'dahaidao_red', 'dahaidao_line', 'hami_hotel', 'xingjiang_restaurant', 'hami_hotel'],
-        morning: '早上 06:30 早点出发，避开酷暑。约 09:00 经 G30 沙枣泉出口抵达 <b>大海道东门游客中心</b>。09:30 - 12:00 只走常规游览线路，不要把前驱 SUV 往沙地或戈壁深处开。',
-        afternoon: '中午 12:10 午饭在 <b>红柳滩游客服务中心</b> 解决（大海道最稳的补给点）。13:00 - 16:00 再走一段常规观景线后原路返回哈密。',
-        evening: '下午 16:00 原路返回哈密。19:00 抵达哈密后晚饭吃 <b>兴江抓饭肉汤馆(光明路店)</b>，吃完直接睡觉休息。',
-        tips: '<b>极度重要：</b> 这一天是全程最累的一天。车上必须提前备足饮用水、馕、面包、香蕉以及孩子零食。严禁前驱车进入戈壁野地！'
+        schedule: [
+          { time: '06:30', desc: '早上 06:30 从哈密市区出发，避开高温。' },
+          { time: '07:40', desc: '抵达 G30 高速 <b>沙枣泉出口</b>。' },
+          { time: '08:00', desc: '08:00-09:10 开到 <b>大海道东门游客中心</b>。说明：东门前段多为铺装路面。' },
+          { time: '09:10', desc: '09:10-10:30 继续往 <b>红柳滩游客服务点</b> 方向走。说明：后段会有沙石路，前驱 SUV 需减速慢行。' },
+          { time: '10:30', desc: '10:30-13:30 只玩常规观景线。玩法固定：游客中心 -> 红柳滩 -> 近核心观景点 -> 原路回。绝对不深穿无人区。' },
+          { time: '12:00', desc: '午饭就在 <b>红柳滩游客服务点</b> 吃自带路餐。' },
+          { time: '13:30', desc: '13:30 准时开始返程。' },
+          { time: '18:00', desc: '18:00-18:30 安全回到哈密市区。' },
+          { time: '19:00', desc: '晚餐吃 <b>兴江抓饭肉汤馆(光明路店)</b>。这顿就吃：抓饭 + 热汤，别再加重口，保护好胃部。' }
+        ],
+        tips: '<b>极度重要：</b> 这一天是全程最累的一天。如果当天风沙大、地面松软，车辆到达红柳滩即刻折返，绝不能硬往深处开。车上必须备足路餐与大量水。'
       },
       {
         day: 'D6',
-        title: '哈密 -> 乌鲁木齐 (第二阶段长途转场)',
+        title: '哈密 -> 乌鲁木齐 (长途转场) + 和田二街',
         distance: '600 km',
-        duration: '正常白天开约 7.5-8 小时',
-        locations: ['hami_hotel', 'tuyugou', 'hanyou_hotel', 'hetian_restaurant', 'hanyou_hotel'],
-        morning: '早上 08:00 从哈密酒店出发前往乌鲁木齐，行驶在 G30 连霍高速上。',
-        afternoon: '中午 12:00 在 <b>吐峪沟服务区</b> 吃简单午饭。下午 16:30 抵达 <b>汉友酒店(乌鲁木齐铁路局店)</b> 办理入住。',
-        evening: '傍晚 18:30 晚饭在 <b>和阗玫瑰抓饭(总店)</b>，品尝招牌的原始抓饭或羊排抓饭。20:00 返回酒店休息。',
-        tips: '乌鲁木齐气温（18-26°C）较哈密明显降低，下车时多给老人和孩子备一件外套防风。'
+        duration: '行车约 8 小时',
+        locations: ['hami_hotel', 'tuyugou', 'hanyou_hotel', 'hetian_restaurant', 'hanyou_hotel', 'hetiandao', 'hanyou_hotel'],
+        schedule: [
+          { time: '08:00', desc: '早上 08:00 从哈密出发，走 G30 连霍高速前往乌鲁木齐。' },
+          { time: '12:00', desc: '抵达 G30 <b>吐峪沟服务区</b> 吃午饭。午饭固定：服务区简餐 + 孩子酸奶。' },
+          { time: '17:00', desc: '下午 17:00 抵达乌鲁木齐市区，入住 <b>汉友酒店(乌鲁木齐铁路局店)</b> 办理手续。' },
+          { time: '18:30', desc: '晚餐吃 <b>和阗玫瑰抓饭(总店)</b>。这顿固定点：原始抓饭/羊排抓饭 + 酸奶。' },
+          { time: '20:00', desc: '20:00 前往 <b>和田二街</b> 扫街，20:00-21:00 只逛，不买大件。' },
+          { time: '21:00', desc: '回住处休息缓路。' }
+        ],
+        tips: '长途转场，横风常见，双手握稳方向盘，控制车速。乌鲁木齐晚上凉爽（18-26°C），注意给孩子多添一件外套。'
       },
       {
         day: 'D7',
-        title: '新疆博物馆 + 红山公园 (首府人文舒缓)',
-        distance: '市区约 25 km',
-        duration: '行车约 1 小时',
-        locations: ['hanyou_hotel', 'xinjiang_museum', 'yangcun_museum', 'hongshan_park', 'mafenghua_restaurant', 'hanyou_hotel'],
-        morning: '上午 09:30 出发前往 <b>新疆维吾尔自治区博物馆</b>，10:00 - 12:00 重点参观精华展馆，不硬逛。',
-        afternoon: '中午 12:10 午饭就近吃 <b>相约·羊村小馆(新疆博物馆店)</b>。14:00 - 16:00 游览 <b>红山公园</b>，只走轻松的主线步道，不让老人爬过多台阶。',
-        evening: '傍晚 18:30 晚饭安排 <b>马风花大盘鸡新疆菜</b>，品尝美味大盘鸡 + 皮带面。20:00 返回酒店休息。',
-        tips: '博物馆需提前通过微信小程序实名预约。红山公园山顶风大，注意给老人和小孩戴好帽子。'
+        title: '天山天池日 (碧水雪峰最稳线)',
+        distance: '220 km (往返)',
+        duration: '行车单程约 1.5 小时',
+        locations: ['hanyou_hotel', 'tianchi_center', 'tianchi_lake', 'tianchi_center', 'hanyou_hotel'],
+        schedule: [
+          { time: '08:00', desc: '从住处出发去 <b>天山天池游客服务中心</b>，车程按 1.5 小时左右算。' },
+          { time: '09:30', desc: '09:30 抵达游客中心，泊车。' },
+          { time: '10:00', desc: '10:00-13:00 玩天池主湖区。玩法固定：游客中心 -> 区间车 -> 主湖区 -> 湖边拍照 -> 原路回。不上长线，不上马牙山，确保体力充足。' },
+          { time: '13:10', desc: '午饭在 <b>天山天池游客服务中心餐饮区</b> 吃快餐。' },
+          { time: '14:00', desc: '起程返回乌鲁木齐。' },
+          { time: '16:00', desc: '16:00-17:00 回到住处彻底午休休息。' },
+          { time: '18:30', desc: '晚餐时间。晚餐自由，不强加新店，就近就餐。' },
+          { time: '19:30', desc: '如果体力还行，可以在住处附近带老人孩子散散步，随后回房休息。' }
+        ],
+        tips: '天池湖边海拔约 1900 米，风大凉爽，老人和小孩下区间车后必须穿防风外套，带上保温杯喝热水。'
       },
       {
         day: 'D8',
-        title: '天山天池雪山碧湖一日游',
-        distance: '220 km (往返)',
-        duration: '行车单程约 1.5 小时',
-        locations: ['hanyou_hotel', 'tianchi_center', 'tianchi_lake', 'tianchi_center', 'hanyou_hotel', 'yangcun_beijingrd', 'hanyou_hotel'],
-        morning: '早上 08:00 出发，约 1.5 小时抵达 <b>天山天池游客服务中心</b>。09:30 - 13:00 换乘区间车游览主湖区，走最稳妥的观景台 and 定海神针线，不上长距离山路。',
-        afternoon: '中午 13:00 午餐在 <b>天池游客服务中心快餐区</b> 解决。下午 15:30 乘车下山返回乌鲁木齐。',
-        evening: '傍晚 18:30 晚饭吃 <b>相约·羊村小馆(北京路店)</b>，这家离所住的汉友酒店更近，吃完早点回房间休息。',
-        tips: '天池海拔近 1900 米，湖面风大且凉，必须带防风厚外套，保温杯备温开水供老人和幼童饮用。'
+        title: '乌鲁木齐市区线：新疆博物馆 + 红山公园 + 水磨沟公园',
+        distance: '市区约 30 km',
+        duration: '行车约 1.5 小时',
+        locations: ['hanyou_hotel', 'xinjiang_museum', 'yangcun_museum', 'hanyou_hotel', 'hongshan_park', 'water_temple', 'hanyou_hotel'],
+        schedule: [
+          { time: '09:30', desc: '从酒店出发去 <b>新疆维吾尔自治区博物馆</b>。' },
+          { time: '10:00', desc: '10:00-12:00 逛博物馆。重点看丝绸之路展与干尸特展，不强行逛完。' },
+          { time: '12:10', desc: '午餐吃 <b>相约·羊村小馆(新疆博物馆店)</b>。这顿固定点：手抓肉/烤包子/家常新疆菜。' },
+          { time: '13:30', desc: '13:30-14:30 返回住处短休息。' },
+          { time: '15:00', desc: '去 <b>红山公园</b>。15:00-16:20 逛红山公园，只走主观景线，乘坐景区车登顶，绝不爬过多台阶。' },
+          { time: '16:40', desc: '去 <b>水磨沟公园</b>。' },
+          { time: '16:40', desc: '16:40-18:00 在水磨沟公园散步慢走，这里泉水长流，绿化遮阳极度舒适。' },
+          { time: '18:30', desc: '回到住处休息。' }
+        ],
+        tips: '新疆博物馆需要提前实名预约。红山公园建议租借轮椅以减轻老人负担。水磨沟的泉水常年不冻，可以陪宝宝看红色锦鲤。'
       },
       {
         day: 'D9',
-        title: '天山大峡谷森林游 + 水磨沟散步',
+        title: '天山大峡谷日 (高山松林牧野)',
         distance: '160 km (往返)',
-        duration: '行车单程约 1.5 小时',
-        locations: ['hanyou_hotel', 'grand_canyon', 'grand_canyon_restaurant', 'water_temple', 'mafenghua_restaurant', 'hanyou_hotel'],
-        morning: '早上 08:00 出发去 <b>天山大峡谷</b>，单程大约 1.5 小时。09:30 - 12:30 只玩景区主线，观赏雪山松林，不带老人孩子走长距离深线。',
-        afternoon: '中午 12:40 午餐在 <b>天山大峡谷游客中心餐厅</b>。15:30 返回市区，16:20 - 18:00 前往 <b>水磨沟公园</b> 散步收尾，看温泉水 and 游鱼。',
-        evening: '傍晚 18:40 晚饭在 <b>马风花大盘鸡新疆菜</b> 享用，这家的菜量非常适合全家人吃饱，餐后回酒店。',
-        tips: '大峡谷游览只走木栈道，不走土路。水磨沟公园避阳绿化好，是非常温和的散步点。'
+        duration: '行车单程约 1.2 小时',
+        locations: ['hanyou_hotel', 'grand_canyon', 'grand_canyon_restaurant', 'hanyou_hotel', 'mafenghua_restaurant', 'hanyou_hotel'],
+        schedule: [
+          { time: '08:00', desc: '从住处去 <b>天山大峡谷景区游客中心</b>，车程按 1 小时 - 1.5 小时算。' },
+          { time: '09:30', desc: '09:30-12:30 玩大峡谷主线。玩法固定：游客中心 -> 主观景点 -> 湖边/栈道 -> 原路回。不走深线，绝对不暴走。' },
+          { time: '12:40', desc: '午饭在 <b>天山大峡谷景区游客中心餐饮区</b> 解决。' },
+          { time: '14:00', desc: '起程返回乌鲁木齐。' },
+          { time: '16:00', desc: '16:00-17:00 回到住处充分午休。' },
+          { time: '18:30', desc: '晚餐去吃 <b>马风花大盘鸡新疆菜</b>。这顿固定点：大盘鸡 + 皮带面。' },
+          { time: '20:00', desc: '吃完饱餐回住处休息。' }
+        ],
+        tips: '大峡谷景区风景宜人，走平缓木栈道即可。不要试图带老人去未开发的野道或高地。'
       },
       {
         day: 'D10',
-        title: '金泉商城小羊采购 + 国际大巴扎 + 和田二街美食',
-        distance: '市区约 30 km',
-        duration: '行车约 1.5 小时',
+        title: '老城购物线：金泉商城 + 国际大巴扎 + 和田二街',
+        distance: '市区约 25 km',
+        duration: '行车约 1 小时',
         locations: ['hanyou_hotel', 'jinquan_mall', 'bazaar', 'hanyou_hotel', 'hetiandao', 'hanyou_hotel'],
-        morning: '上午 10:00 前往 <b>金泉商城(解放南路)</b>，这里负责采购文创小羊、民族风围巾、冰箱贴等精美小物件（性价比极高）。',
-        afternoon: '中午 12:00 前往 <b>新疆国际大巴扎</b> 采购正式伴手礼。12:00 - 15:00 只逛 2号楼服饰、3号楼干果/工艺品 and 步行街。15:30 - 17:00 回酒店午休。',
-        evening: '下午 18:00 去 <b>和田二街</b> 享受地道西域小吃。今晚不吃正餐，在和田二街吃烤包子、羊肉串、酸奶、馕，吃完返回酒店。',
-        tips: '金泉商城的文创冰箱贴和小文创羊价格比大巴扎便宜，可在此集中讲价。和田二街人流多，照看好 3 岁宝宝。'
+        schedule: [
+          { time: '10:00', desc: '首站前往 <b>金泉商城(解放南路店)</b>。10:00-11:30 采购小件，固定买：冰箱贴、小首饰、小包、民族风小物（价格公道划算）。' },
+          { time: '11:40', desc: '去 <b>新疆国际大巴扎</b>。' },
+          { time: '12:00', desc: '12:00-13:00 在 <b>大巴扎美食广场</b> 享用特色午餐。' },
+          { time: '13:00', desc: '13:00-16:30 逛大巴扎。固定路线：先2号楼服饰 -> 再3号楼干果/工艺品 -> 最后步行街。固定买：披肩、民族服饰、干果、铜器、小礼物。' },
+          { time: '16:30', desc: '回酒店稍作午休（也可在大巴扎打包好特产直接快递寄出）。' },
+          { time: '17:30', desc: '17:30-19:30 去 <b>和田二街</b>。和田二街只负责 <b>逛吃收尾</b>。' },
+          { time: '19:30', desc: '今晚不再去饭馆吃正餐，就在和田二街吃小吃（烤包子、烤羊肉、手工酸奶、烤馕）直接结束，吃饱回酒店。' }
+        ],
+        tips: '金泉商城的工艺品讲价空间较大。和田二街小吃极其正宗，晚上人流大，请抓紧宝宝，注意随身物品安全。'
       },
       {
         day: 'D11',
-        title: '乌鲁木齐 -> 哈密 (返程第一阶段)',
+        title: '乌鲁木齐 -> 哈密 (返程转场)',
         distance: '600 km',
-        duration: '正常白天开约 7.5-8 小时',
-        locations: ['hanyou_hotel', 'tuyugou', 'hami_hotel', 'yiloulan_restaurant', 'hami_hotel'],
-        morning: '早上 08:00 从乌鲁木齐酒店出发返回哈密，行驶在 G30 回程路段。',
-        afternoon: '中午 12:00 在 <b>吐峪沟服务区</b> 享用简单午餐，缩短逗留时间。下午 16:30 返回 <b>铂雅精品酒店(哈密火车站店)</b> 办理入住。',
-        evening: '傍晚 18:30 晚饭吃 <b>驿楼兰·新疆菜(火车站店)</b>，这顿做为返程的收尾晚餐。19:30 饭后回酒店休息。',
-        tips: '回程路上注意车速，下午段注意哈密的高温，空调制冷调好。'
+        duration: '行车约 8 小时',
+        locations: ['hanyou_hotel', 'tuyugou', 'hami_hotel', 'xingjiang_restaurant', 'hami_hotel'],
+        schedule: [
+          { time: '08:00', desc: '早上 08:00 从乌鲁木齐酒店退房，原路返回哈密。' },
+          { time: '12:00', desc: '中午 12:00 抵达 <b>吐峪沟服务区</b> 吃午餐休整。' },
+          { time: '17:00', desc: '下午 17:00 安全回到哈密市区，入住 <b>铂雅精品酒店(哈密火车站店)</b>。' },
+          { time: '18:30', desc: '晚餐三选一收尾：兴江抓饭肉汤馆(光明路店) / 驿楼兰·新疆菜(火车站店) / 青禾小厨(新民五路店)。建议收尾选 <b>兴江抓饭肉汤馆</b>，吃大盘热汤和抓饭，最省脑子。' },
+          { time: '20:00', desc: '吃完回酒店休息，整理返程行李。' }
+        ],
+        tips: '返程路途漫长，行车保持警惕。下午抵达哈密市区比较炎热，先回酒店洗个热水澡避暑。'
       },
       {
         day: 'D12',
-        title: '哈密 -> 酒泉 (安全归来)',
+        title: '哈密 -> 酒泉 (安全归家)',
         distance: '625 km',
-        duration: '行车约 7 小时',
+        duration: '行车约 7.5 小时',
         locations: ['hami_hotel', 'liuyuan', 'jiuquan'],
-        morning: '早上 08:00 从哈密出发，通过星星峡安检口出疆。',
-        afternoon: '中午 12:00 在 <b>柳园服务区</b> 吃简单午餐，下午 15:30 - 16:30 安全回到酒泉，全部自驾行程圆满结束。',
-        evening: '安全到家，洗车清理车辆积灰 and 沙尘，好好休息。',
-        tips: '出疆需要通过星星峡安检站，准备好所有人身份证件。'
+        schedule: [
+          { time: '08:00', desc: '早上 08:00 从哈密住处出发回酒泉。' },
+          { time: '12:00', desc: '中午 12:00 抵达 <b>柳园服务区</b> 吃简易午餐。' },
+          { time: '16:00', desc: '下午 16:00 左右安全抵达甘肃酒泉，圆满结束本次舒缓自驾旅程。' }
+        ],
+        tips: '出疆需要通过安检，备好身份证件。到家后多休息，建议将车辆做一次彻底的洗车和空调滤芯清理。'
       }
     ];
 
@@ -1375,20 +1582,29 @@
     }
 
     // Custom Glowing DivIcon creator
-    function createCustomIcon(type, labelText, isActive = false) {
+    function createCustomIcon(type, labelText, isActive = false, thumbnailUrl = null) {
       let colorClass = '';
       if (type === 'stay') colorClass = 'stay';
       if (type === 'sight') colorClass = 'sight';
       if (isActive) colorClass += ' active';
 
+      let pinHtml = `<div class="marker-pin ${colorClass}"></div>`;
+      if (thumbnailUrl) {
+        pinHtml = `
+          <div class="image-marker ${isActive ? 'active' : ''}">
+            <img src="${thumbnailUrl}" alt="${labelText}">
+          </div>
+        `;
+      }
+
       return L.divIcon({
         className: 'custom-marker',
         html: `
-          <div class="marker-pin ${colorClass}"></div>
+          ${pinHtml}
           <div class="marker-label">${labelText}</div>
         `,
-        iconSize: [30, 42],
-        iconAnchor: [15, 42]
+        iconSize: [40, 50],
+        iconAnchor: [20, 50]
       });
     }
 
@@ -1407,16 +1623,22 @@
         if (stays.includes(key)) type = 'stay';
 
         const marker = L.marker(loc.coords, {
-          icon: createCustomIcon(type, loc.name)
+          icon: createCustomIcon(type, loc.name, false, loc.thumbnail)
         }).addTo(map);
 
-        marker.bindPopup(`
-          <div style="color:var(--text-dark); font-family:var(--font-body); padding: 5px;">
+        let popupContent = `
+          <div style="color:var(--text-dark); font-family:var(--font-body); padding: 5px; max-width:200px;">
             <b style="font-size:14px; color:var(--color-accent);">${loc.name}</b>
             <p style="margin-top:5px; font-size:12px; line-height:1.3;">${loc.desc}</p>
-          </div>
-        `);
+        `;
+        if (loc.thumbnail) {
+          popupContent += `
+            <img src="${loc.thumbnail}" style="width:100%; height:100px; object-fit:cover; border-radius:6px; margin-top:8px;" alt="${loc.name}">
+          `;
+        }
+        popupContent += `</div>`;
 
+        marker.bindPopup(popupContent);
         markers[key] = marker;
       }
     }
@@ -1507,6 +1729,51 @@
         div.id = `day-item-${index}`;
         div.onclick = () => setActiveDay(index);
 
+        let detailSectionHtml = '';
+        if (currentTab === 12 && item.schedule) {
+          detailSectionHtml = `
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                小时级行程明细 / 导航规划
+              </div>
+              <div class="hour-schedule">
+                ${item.schedule.map(s => `
+                  <div class="schedule-node">
+                    <div class="node-time">${s.time}</div>
+                    <div class="node-desc">${s.desc}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          // Fallback for 7 days
+          detailSectionHtml = `
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                上午安排
+              </div>
+              <div class="detail-content">${item.morning}</div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                下午安排 (含防暑防晒休整)
+              </div>
+              <div class="detail-content">${item.afternoon}</div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                傍晚与入住提示
+              </div>
+              <div class="detail-content">${item.evening}</div>
+            </div>
+          `;
+        }
+
         div.innerHTML = `
           <div class="timeline-dot"></div>
           <div class="timeline-header">
@@ -1515,30 +1782,10 @@
           </div>
           <div class="timeline-title">${item.title}</div>
           <div class="day-detail">
-            <div class="detail-section">
-              <div class="detail-label">
-                <svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
-                上午行程 / 导航建议
-              </div>
-              <div class="detail-content">${item.morning}</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">
-                <svg viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                下午安排 (避暑/午休)
-              </div>
-              <div class="detail-content">${item.afternoon}</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">
-                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                傍晚美食、购物与入住
-              </div>
-              <div class="detail-content">${item.evening}</div>
-            </div>
+            ${detailSectionHtml}
             <div class="detail-section" style="background: rgba(249, 115, 22, 0.05); padding: 6px; border-radius: 4px; border-left: 2px solid var(--color-accent); margin-top: 5px;">
               <div class="detail-label" style="color: var(--color-accent);">
-                <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                 老人儿童与车辆警示
               </div>
               <div class="detail-content" style="font-size:0.75rem;">${item.tips}</div>
@@ -1563,7 +1810,7 @@
       for (let key in markers) {
         let type = stays.includes(key) ? 'stay' : 'sight';
         const isCurrentLoc = currentDayData.locations.includes(key);
-        markers[key].setIcon(createCustomIcon(type, locations[key].name, isCurrentLoc));
+        markers[key].setIcon(createCustomIcon(type, locations[key].name, isCurrentLoc, locations[key].thumbnail));
         
         if (isCurrentLoc) {
           markers[key].setZIndexOffset(1000);
@@ -1635,6 +1882,24 @@
       const items = document.querySelectorAll(`#items-${category} input`);
       const checked = Array.from(items).filter(i => i.checked).length;
       document.getElementById(`progress-${category}`).innerText = `${checked}/${items.length}`;
+    }
+
+    // Collapsible Panels Logic
+    function toggleRightPanel() {
+      const panel = document.querySelector('.right-panel');
+      const icon = document.getElementById('toggle-icon');
+      
+      panel.classList.toggle('collapsed');
+      
+      if (panel.classList.contains('collapsed')) {
+        icon.innerHTML = '◀';
+      } else {
+        icon.innerHTML = '▶';
+      }
+      
+      setTimeout(() => {
+        if (map) map.invalidateSize({ animate: true });
+      }, 300);
     }
 
     // Page Load Setup
