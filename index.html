@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>东疆自驾轻松线 · 智能互动旅游地图</title>
+  
+  <!-- SEO Meta -->
+  <meta name="description" content="专为2位老人、1位3岁幼童及前驱SUV定制的甘肃酒泉至新疆哈密、乌鲁木齐自驾游智能互动路线规划图，包含详尽的每日行程、高速路况提示、天气预报、防晒避暑及安全出行清单。">
+  
+  <!-- Font Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <style>
+    /* CSS Variables & Theme (Liquid Glass Dark Mode) */
+    :root {
+      --bg-dark: #070b19;
+      --bg-card: rgba(16, 22, 47, 0.65);
+      --bg-card-hover: rgba(22, 32, 69, 0.8);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(14, 165, 233, 0.2);
+      
+      --color-primary: #0ea5e9; /* Sky Blue */
+      --color-secondary: #38bdf8;
+      --color-accent: #f97316; /* Adventure Orange */
+      --color-success: #10b981; /* Emerald */
+      --color-purple: #a855f7;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dark: #0f172a;
+      
+      --font-heading: 'Noto Serif SC', 'Playfair Display', serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-primary) var(--bg-dark);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(14, 165, 233, 0.3);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-primary);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      letter-spacing: 0.05em;
+    }
+
+    /* Layout & Header */
+    header {
+      padding: 1.25rem 2rem;
+      background: rgba(7, 11, 25, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-container svg {
+      width: 2.25rem;
+      height: 2.25rem;
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+    }
+
+    .title-group h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 30%, var(--color-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .title-group p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Stats Overview Row */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glass);
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-badge span.accent {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    .stat-badge span.sky {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* Main Dashboard Grid */
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 380px 1fr 380px;
+      flex-grow: 1;
+      height: calc(100vh - 76px);
+      min-height: 600px;
+    }
+
+    /* Common Card Styling (Glassmorphism) */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-panel:hover {
+      border-color: var(--border-glow);
+    }
+
+    /* Left Panel: Itinerary Planner */
+    .left-panel {
+      border-right: 1px solid var(--border-glass);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+      overflow-y: auto;
+      height: 100%;
+      background: rgba(7, 11, 25, 0.4);
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 0.5rem;
+    }
+
+    /* Route Tab Switcher */
+    .tab-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      padding: 0.25rem;
+      border: 1px solid var(--border-glass);
+    }
+
+    .route-tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .route-tab.active {
+      background: var(--color-primary);
+      color: var(--text-dark);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+
+    /* Timeline Styling */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .timeline-item {
+      cursor: pointer;
+      position: relative;
+      padding-left: 1.5rem;
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+      margin-left: 0.5rem;
+      transition: all 0.25s;
+    }
+
+    .timeline-item.active {
+      border-left-color: var(--color-accent);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -6px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      border: 2px solid var(--bg-dark);
+      transition: all 0.25s;
+    }
+
+    .timeline-item.active .timeline-dot {
+      background: var(--color-accent);
+      box-shadow: 0 0 8px var(--color-accent);
+      transform: scale(1.3);
+    }
+
+    .timeline-day {
+      font-size: 0.75rem;
+      color: var(--color-accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-title {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .timeline-item:hover .timeline-title {
+      color: var(--color-secondary);
+    }
+
+    .timeline-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.15rem;
+    }
+
+    /* Timeline Detail Card (expanded when active) */
+    .day-detail {
+      display: none;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .timeline-item.active .day-detail {
+      display: block;
+    }
+
+    .detail-section {
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .detail-label svg {
+      width: 0.9rem;
+      height: 0.9rem;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .detail-content {
+      color: var(--text-main);
+    }
+
+    /* Central Map View */
+    .map-container-wrapper {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #map {
+      flex-grow: 1;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Map Overlay Tools */
+    .map-overlay-card {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10;
+      pointer-events: auto;
+      max-width: 320px;
+      font-size: 0.8rem;
+      background: rgba(7, 11, 25, 0.85);
+      border: 1px solid var(--border-glass);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .overlay-title {
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .overlay-title svg {
+      width: 1rem;
+      height: 1rem;
+      stroke: var(--color-accent);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Right Panel: Weather, Safety & Checklists */
+    .right-panel {
+      border-left: 1px solid var(--border-glass);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+      overflow-y: auto;
+      height: 100%;
+      background: rgba(7, 11, 25, 0.4);
+    }
+
+    /* Weather Comparison Widget */
+    .weather-widget {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .weather-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weather-card.hot {
+      border-top: 3px solid var(--color-accent);
+    }
+
+    .weather-card.cool {
+      border-top: 3px solid var(--color-primary);
+    }
+
+    .weather-city {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .weather-temp {
+      font-size: 1.4rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      margin: 0.25rem 0;
+    }
+
+    .weather-card.hot .weather-temp {
+      color: var(--color-accent);
+    }
+
+    .weather-card.cool .weather-temp {
+      color: var(--color-primary);
+    }
+
+    .weather-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Checklist Widget */
+    .checklist-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .checklist-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      margin-bottom: 0.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .checklist-progress {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.25rem 0;
+    }
+
+    .check-item input {
+      margin-top: 0.15rem;
+      cursor: pointer;
+      accent-color: var(--color-primary);
+    }
+
+    .check-item span {
+      line-height: 1.3;
+      transition: color 0.2s;
+    }
+
+    .check-item input:checked + span {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    /* Calculator Component */
+    .calc-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    .calc-input {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      width: 80px;
+      text-align: right;
+      font-size: 0.75rem;
+    }
+
+    .calc-result {
+      font-weight: 600;
+      color: var(--color-success);
+    }
+
+    /* Warning Alert Banner on Map */
+    .wind-warning-banner {
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      border-radius: 6px;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      color: #ffedd5;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    .wind-warning-banner svg {
+      width: 1.2rem;
+      height: 1.2rem;
+      stroke: var(--color-accent);
+      stroke-width: 2;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    /* Custom Map Markers (Leaflet Custom DivIcon styling) */
+    .custom-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+    }
+
+    .marker-pin {
+      width: 24px;
+      height: 24px;
+      border-radius: 50% 50% 50% 0;
+      background: var(--color-primary);
+      position: absolute;
+      transform: rotate(-45deg);
+      left: 50%;
+      top: 50%;
+      margin: -15px 0 0 -12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      border: 2px solid #fff;
+      transition: all 0.3s;
+    }
+
+    .marker-pin::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      position: absolute;
+    }
+
+    .marker-pin.stay {
+      background: var(--color-purple);
+    }
+
+    .marker-pin.sight {
+      background: var(--color-accent);
+    }
+
+    .marker-pin.active {
+      transform: rotate(-45deg) scale(1.25);
+      box-shadow: 0 0 15px var(--color-secondary);
+      background: #fff;
+    }
+
+    .marker-label {
+      position: absolute;
+      bottom: -22px;
+      white-space: nowrap;
+      background: rgba(7, 11, 25, 0.85);
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      pointer-events: none;
+    }
+
+    /* Keyframe Animations */
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(14, 165, 233, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .dashboard-container {
+        grid-template-columns: 320px 1fr 320px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 400px auto;
+        height: auto;
+        overflow-y: auto;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .left-panel, .right-panel {
+        height: 500px;
+        border: none;
+      }
+
+      #map {
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="title-group">
+        <h1>东疆自驾轻松线 · 智能出行规划</h1>
+        <p>专为2位老人、1位3岁幼童、前驱SUV定制的舒缓自驾旅程</p>
+      </div>
+    </div>
+    
+    <!-- Badges -->
+    <div class="stats-bar">
+      <div class="stat-badge">
+        <span>推荐方案：</span>
+        <span class="accent">7天6晚 舒适版</span>
+      </div>
+      <div class="stat-badge">
+        <span>全长：</span>
+        <span class="sky">约2,500 km</span>
+      </div>
+      <div class="stat-badge">
+        <span>路况：</span>
+        <span class="sky">G30高速(100%铺装)</span>
+      </div>
+      <div class="stat-badge">
+        <span>车型建议：</span>
+        <span class="accent">前驱SUV完全够用</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard-container">
+    
+    <!-- Left Panel: Timeline & Daily Plan -->
+    <div class="left-panel">
+      <div class="panel-title">
+        <svg style="width:1.1rem; height:1.1rem; fill:none; stroke:currentColor; stroke-width:2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg>
+        自驾行程时间线
+      </div>
+      
+      <!-- Tab Switcher -->
+      <div class="tab-container">
+        <button class="route-tab" id="btn-tab-6" onclick="switchRoutePlan(6)">6天5晚 推荐版</button>
+        <button class="route-tab active" id="btn-tab-7" onclick="switchRoutePlan(7)">7天6晚 舒适版</button>
+      </div>
+      
+      <!-- Timeline Items -->
+      <div class="timeline" id="timeline-container">
+        <!-- JS will dynamically render timeline here -->
+      </div>
+    </div>
+    
+    <!-- Central Map View -->
+    <div class="map-container-wrapper">
+      <div id="map"></div>
+      
+      <!-- Map Glass Overlay Card -->
+      <div class="glass-panel map-overlay-card">
+        <div class="overlay-title">
+          <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          新疆自驾 · 极度重要提醒
+        </div>
+        <p style="margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.75rem; line-height: 1.3;">
+          本路线全程为铺装路面。<b>严禁驾驶前驱SUV离开公路进入戈壁荒野或景区外无路区域</b>。
+        </p>
+        <div class="wind-warning-banner">
+          <svg viewBox="0 0 24 24"><path d="M2 10h20M2 14h18M2 18h15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <b>百里风区警告 (哈密-乌鲁木齐段)</b><br>
+            途经七角井、七克台时，如遇大风，双手紧握方向盘，减速至80km/h以下，大风沙天气切勿超车。
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Panel: Weather, Checklist & Tools -->
+    <div class="right-panel">
+      
+      <!-- Weather Panel -->
+      <div>
+        <div class="panel-title">
+          <svg style="width:1.1rem; height:1.1rem; fill:none; stroke:currentColor; stroke-width:2" viewBox="0 0 24 24">
+            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+          </svg>
+          两地核心天气
+        </div>
+        <div class="weather-widget">
+          <div class="weather-card hot">
+            <div class="weather-city">哈密市</div>
+            <div class="weather-temp">33-38°C</div>
+            <div class="weather-desc">高温晴晒 · 避开午后户外</div>
+          </div>
+          <div class="weather-card cool">
+            <div class="weather-city">乌鲁木齐</div>
+            <div class="weather-temp">18-26°C</div>
+            <div class="weather-desc">凉爽舒适 · 早晚需外套</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Calculator Panel -->
+      <div>
+        <div class="panel-title">
+          <svg style="width:1.1rem; height:1.1rem; fill:none; stroke:currentColor; stroke-width:2" viewBox="0 0 24 24">
+            <path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M20 21H4a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+          </svg>
+          费用与油耗估算
+        </div>
+        <div class="calc-box">
+          <div class="calc-row">
+            <span>车百公里油耗 (L)</span>
+            <input type="number" id="fuel-rate" class="calc-input" value="8.0" oninput="calculateCosts()">
+          </div>
+          <div class="calc-row">
+            <span>92#汽油单价 (元/L)</span>
+            <input type="number" id="fuel-price" class="calc-input" value="8.1" oninput="calculateCosts()">
+          </div>
+          <div class="calc-row">
+            <span>估算总里程数 (km)</span>
+            <span id="calc-miles" style="font-weight: 500;">2500 km</span>
+          </div>
+          <div style="border-top: 1px solid var(--border-glass); margin: 0.25rem 0;"></div>
+          <div class="calc-row">
+            <span>预计总油费:</span>
+            <span id="result-fuel" class="calc-result">¥1,620</span>
+          </div>
+          <div class="calc-row">
+            <span>预计过路费 (高速):</span>
+            <span id="result-toll" class="calc-result">¥1,080</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist Panel -->
+      <div>
+        <div class="panel-title">
+          <svg style="width:1.1rem; height:1.1rem; fill:none; stroke:currentColor; stroke-width:2" viewBox="0 0 24 24">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          自驾整备清单
+        </div>
+        
+        <!-- Checklist Categories -->
+        <div class="checklist-section">
+          <div class="checklist-title">
+            <span>🚗 车辆安全点检</span>
+            <span class="checklist-progress" id="progress-car">0/6</span>
+          </div>
+          <div class="checklist-items" id="items-car">
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('car')"><span>检查备胎及千斤顶/扳手是否齐全</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('car')"><span>检查四个轮胎磨损及胎压(推荐2.5bar)</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('car')"><span>加满玻璃水(新疆风沙大，多备一瓶)</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('car')"><span>检查空调滤芯，防晒暴晒制冷检测</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('car')"><span>发动机冷却液/防冻液面检查</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('car')"><span>长途行车记录仪存储空间清理</span></label>
+          </div>
+        </div>
+
+        <div class="checklist-section" style="margin-top: 0.5rem;">
+          <div class="checklist-title">
+            <span>👵👶 老人与幼童特备</span>
+            <span class="checklist-progress" id="progress-family">0/6</span>
+          </div>
+          <div class="checklist-items" id="items-family">
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>3岁幼童安全座椅 (强制且关键)</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>防晒衣/遮阳帽/儿童太阳镜</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>保温杯(老人随时需要温开水)</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>老人日常药品及晕车药/藿香正气水</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>车载小玩具、磨牙零食及绘本</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateChecklist('family')"><span>大量湿纸巾、垃圾袋、便携式小便器</span></label>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <script>
+    // Route Data Definition
+    const locations = {
+      jiuquan: { name: '酒泉', coords: [39.73, 98.49], desc: '出发起点，河西走廊绿洲' },
+      guazhou: { name: '瓜州', coords: [40.52, 95.77], desc: '甜瓜之乡，必停吃瓜服务区' },
+      xingxingxia: { name: '星星峡', coords: [41.79, 95.13], desc: '甘新交界安检站，准备入疆' },
+      hami: { name: '哈密', coords: [42.83, 93.51], desc: '东疆门户，回王府所在地' },
+      qijiaojing: { name: '七角井', coords: [43.25, 90.84], desc: '百里风区风口，注意防风' },
+      shanshan: { name: '鄯善', coords: [42.87, 90.17], desc: '库木塔格沙漠旁，高温路段' },
+      turpan: { name: '吐鲁番', coords: [42.95, 89.18], desc: '火焰山旁，中国陆地最低点之一' },
+      dabancheng: { name: '达坂城', coords: [43.35, 88.31], desc: '百里风车大世界，风力强劲' },
+      urumqi: { name: '乌鲁木齐', coords: [43.82, 87.61], desc: '新疆首府，大巴扎与博物馆' },
+      tianchi: { name: '天山天池', coords: [43.90, 88.13], desc: '世界自然遗产，雪山松林碧湖' }
+    };
+
+    // Itinerary details for 6-day vs 7-day versions
+    const itinerary6Days = [
+      {
+        day: 'D1',
+        title: '酒泉 -> 哈密 (纯长途转场)',
+        distance: '625 km',
+        duration: '约 8 小时',
+        locations: ['jiuquan', 'guazhou', 'xingxingxia', 'hami'],
+        morning: '早上 07:00 出发，避开中午最炎热的时间段。',
+        afternoon: '中午在瓜州服务区停靠吃甜瓜休息；通过星星峡安检站进入新疆。',
+        evening: '傍晚抵达哈密，入住酒店，只安排晚饭，早点休息以恢复体力。',
+        tips: '1. 进入星星峡排队安检时，带好所有人身份证及车辆证件。<br>2. 哈密干燥炎热，酒店一定要提前开启空调降温。'
+      },
+      {
+        day: 'D2',
+        title: '哈密轻松休整游',
+        distance: '市区 20 km',
+        duration: '约 1 小时',
+        locations: ['hami'],
+        morning: '上午 10:00 前往【回王府/回王景区】，了解东疆历史文化。无高强度徒步，极适合老人。',
+        afternoon: '中午 13:00 - 17:00 气温最高 (可达38°C)，必须回酒店进行午休。',
+        evening: '傍晚 19:00 后气温降低，前往哈密市区散步，买本地哈密瓜，品尝大盘鸡。',
+        tips: '哈密紫外线极强，老人与孩子在室外必须戴遮阳帽，擦好防晒霜。'
+      },
+      {
+        day: 'D3',
+        title: '哈密 -> 乌鲁木齐 (纯长途转场)',
+        distance: '600 km',
+        duration: '约 8 小时',
+        locations: ['hami', 'qijiaojing', 'shanshan', 'turpan', 'dabancheng', 'urumqi'],
+        morning: '早上 08:00 出发，沿G30高速一路向西。',
+        afternoon: '途经七角井、吐鲁番、达坂城。此段为百里风区，横风大、气温高。在吐鲁番/鄯善服务区多休息。',
+        evening: '傍晚抵达乌鲁木齐，入住酒店。乌鲁木齐比哈密凉爽得多 (体感22°C上下)，非常舒适。',
+        tips: '达坂城段和七角井段横风常见，SUV车身较高，前驱车务必控制在100km/h以内，双手握稳方向盘。'
+      },
+      {
+        day: 'D4',
+        title: '乌鲁木齐市区人文游',
+        distance: '市区 30 km',
+        duration: '约 1.5 小时',
+        locations: ['urumqi'],
+        morning: '上午 10:00 参观【新疆维吾尔自治区博物馆】，了解新疆历史和干尸展，老人孩子都不累。',
+        afternoon: '中午在附近吃抓饭，下午14:00-17:00回酒店午休，避开日晒。',
+        evening: '傍晚 18:30 前往【国际大巴扎】，吃羊肉串、听歌舞、买手工干果，体验浓郁民族风情。',
+        tips: '博物馆需提前在小程序预约门票。大巴扎人流密集，牵紧3岁孩子防止走失。'
+      },
+      {
+        day: 'D5',
+        title: '天山天池一日往返',
+        distance: '220 km (往返)',
+        duration: '开车单程 1.5 小时',
+        locations: ['urumqi', 'tianchi'],
+        morning: '早上 08:30 乌鲁木齐出发，自驾约1.5小时抵达天池游客中心，换乘景区区间车上山。',
+        afternoon: '天池海拔约1900米，空气清新。漫步石门一线、定海神针，远眺博格达雪峰。',
+        evening: '下午 16:00 乘车下山返回乌鲁木齐。晚上在市区安排温和的汤饭，调理肠胃。',
+        tips: '天池山顶温度比市区低6-8°C，且风大，必须给老人和幼童备一件防风保暖外套。'
+      },
+      {
+        day: 'D6',
+        title: '乌鲁木齐 -> 哈密 -> 返回酒泉',
+        distance: '1,225 km',
+        duration: '需多日返程',
+        locations: ['urumqi', 'hami', 'jiuquan'],
+        morning: '本天为返程日。由于长途极为疲劳，强烈建议中途在哈密再住1晚。',
+        afternoon: '乌鲁木齐至哈密600公里，切勿疲劳驾驶。',
+        evening: '若行程紧迫必须一次性跑完，需两位司机轮换，但极不推荐带老人幼童如此折腾。',
+        tips: '建议直接参考下方的“7天6晚舒适版”行程，返程分为两天，安全性大增。'
+      }
+    ];
+
+    const itinerary7Days = [
+      {
+        day: 'D1',
+        title: '酒泉 -> 哈密 (第一阶段转场)',
+        distance: '625 km',
+        duration: '约 8 小时',
+        locations: ['jiuquan', 'guazhou', 'xingxingxia', 'hami'],
+        morning: '早上 07:00 出发，避开中午最炎热的时间段。',
+        afternoon: '中午在瓜州服务区停靠吃甜瓜休息；通过星星峡安检站进入新疆。',
+        evening: '傍晚抵达哈密，入住酒店，只安排晚饭，早点休息以恢复体力。',
+        tips: '1. 进入星星峡排队安检时，带好所有人身份证及车辆证件。<br>2. 哈密干燥炎热，酒店定好后可电话请前台提前开启空调降温。'
+      },
+      {
+        day: 'D2',
+        title: '哈密轻松休整游 (不赶路)',
+        distance: '市区 20 km',
+        duration: '约 1 小时',
+        locations: ['hami'],
+        morning: '上午 10:00 前往【回王府/回王景区】，了解东疆历史文化。无高强度徒步，极适合老人。',
+        afternoon: '中午 13:00 - 17:00 气温最高 (可达38°C)，必须回酒店进行午休。',
+        evening: '傍晚 19:00 后气温降低，前往哈密市区散步，买本地哈密瓜，品尝大盘鸡。',
+        tips: '哈密紫外线极强，老人与孩子在室外必须戴遮阳帽，擦好防晒霜。'
+      },
+      {
+        day: 'D3',
+        title: '哈密 -> 乌鲁木齐 (第二阶段转场)',
+        distance: '600 km',
+        duration: '约 8 小时',
+        locations: ['hami', 'qijiaojing', 'shanshan', 'turpan', 'dabancheng', 'urumqi'],
+        morning: '早上 08:00 出发，沿G30高速一路向西。',
+        afternoon: '途经七角井、吐鲁番、达坂城。此段为百里风区，横风大、气温高。在吐鲁番/鄯善服务区多休息。',
+        evening: '傍晚抵达乌鲁木齐，入住酒店。乌鲁木齐比哈密凉爽得多 (体感22°C上下)，非常舒适。',
+        tips: '达坂城段和七角井段横风常见，SUV车身较高，前驱车务必控制在100km/h以内，双手握稳方向盘。'
+      },
+      {
+        day: 'D4',
+        title: '乌鲁木齐市区人文亲子线',
+        distance: '市区 30 km',
+        duration: '约 1.5 小时',
+        locations: ['urumqi'],
+        morning: '上午 10:00 参观【新疆维吾尔自治区博物馆】，了解新疆历史和干尸展，老人孩子都不累。',
+        afternoon: '中午在附近吃抓饭，下午14:00-17:00回酒店午休，避开日晒。',
+        evening: '傍晚 18:30 前往【国际大巴扎】，吃羊肉串、听歌舞、买手工干果，体验浓郁民族风情。',
+        tips: '博物馆需提前在小程序预约门票。大巴扎人流密集，牵紧3岁孩子防止走失。'
+      },
+      {
+        day: 'D5',
+        title: '天山天池大美自然一日游',
+        distance: '220 km (往返)',
+        duration: '开车单程 1.5 小时',
+        locations: ['urumqi', 'tianchi'],
+        morning: '早上 08:30 乌鲁木齐出发，自驾约1.5小时抵达天池游客中心，换乘景区区间车上山。',
+        afternoon: '天池海拔约1900米，空气清新。漫步石门一线、定海神针，远眺博格达雪峰。',
+        evening: '下午 16:00 乘车下山返回乌鲁木齐。晚上在市区安排温和的汤饭，调理肠胃。',
+        tips: '天池山顶温度比市区低6-8°C，且风大，必须给老人和幼童备一件防风保暖外套。'
+      },
+      {
+        day: 'D6',
+        title: '乌鲁木齐休整半天 -> 哈密',
+        distance: '600 km',
+        duration: '约 7.5 小时',
+        locations: ['urumqi', 'dabancheng', 'turpan', 'shanshan', 'hami'],
+        morning: '早上睡到自然醒。在乌鲁木齐采购一些水果、干果，打包行李。中午12点前出发。',
+        afternoon: '开始返程第一阶段。G30原路返回哈密。中途在鄯善服务区休整。',
+        evening: '晚上 20:00 左右抵达哈密入住。避开了最晒的时间，且老人孩子不累。',
+        tips: '返程不要赶时间，前驱车注意水温表，在高速服务区多停车，让发动机也降降温。'
+      },
+      {
+        day: 'D7',
+        title: '哈密 -> 返回酒泉',
+        distance: '625 km',
+        duration: '约 8 小时',
+        locations: ['hami', 'xingxingxia', 'guazhou', 'jiuquan'],
+        morning: '早上 08:00 从哈密出发，再次经星星峡出疆。',
+        afternoon: '中午在瓜州吃个简餐，继续行驶在河西走廊高速公路上。',
+        evening: '傍晚安全抵达酒泉，温馨的东疆轻松自驾游完美结束。',
+        tips: '回程过星星峡同样需要安检，请提前备好证件。回家后给车洗个澡，清理风沙尘土。'
+      }
+    ];
+
+    let currentTab = 7; // Default to 7 days
+    let map;
+    let markers = {};
+    let routePolyline;
+    let activeDayIndex = 0;
+
+    // Initialize Map
+    function initMap() {
+      // Centered around eastern Xinjiang
+      map = L.map('map', {
+        zoomControl: false
+      }).setView([42.2, 92.5], 6);
+
+      // Add Zoom Control at bottom-right
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+      // CartoDB Dark Matter tile layer (visually gorgeous dark theme)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+      }).addTo(map);
+
+      // Draw custom locations on map
+      renderMarkers();
+      
+      // Initial route display
+      drawRoute();
+    }
+
+    // Custom Glowing DivIcon creator
+    function createCustomIcon(type, labelText, isActive = false) {
+      let colorClass = '';
+      if (type === 'stay') colorClass = 'stay';
+      if (type === 'sight') colorClass = 'sight';
+      if (isActive) colorClass += ' active';
+
+      return L.divIcon({
+        className: 'custom-marker',
+        html: `
+          <div class="marker-pin ${colorClass}"></div>
+          <div class="marker-label">${labelText}</div>
+        `,
+        iconSize: [30, 42],
+        iconAnchor: [15, 42]
+      });
+    }
+
+    // Render all points of interest as map markers
+    function renderMarkers() {
+      // Clear existing markers if any
+      for (let key in markers) {
+        map.removeLayer(markers[key]);
+      }
+      markers = {};
+
+      // Determine marker categories
+      const stays = ['jiuquan', 'hami', 'urumqi'];
+      const sights = ['tianchi', 'guazhou', 'xingxingxia', 'qijiaojing', 'shanshan', 'turpan', 'dabancheng'];
+
+      for (let key in locations) {
+        const loc = locations[key];
+        let type = 'sight';
+        if (stays.includes(key)) type = 'stay';
+
+        const marker = L.marker(loc.coords, {
+          icon: createCustomIcon(type, loc.name)
+        }).addTo(map);
+
+        // Tooltip popup
+        marker.bindPopup(`
+          <div style="color:var(--text-dark); font-family:var(--font-body); padding: 5px;">
+            <b style="font-size:14px; color:var(--color-accent);">${loc.name}</b>
+            <p style="margin-top:5px; font-size:12px; line-height:1.3;">${loc.desc}</p>
+          </div>
+        `);
+
+        markers[key] = marker;
+      }
+    }
+
+    // Draw lines connecting points representing the road path
+    function drawRoute() {
+      if (routePolyline) {
+        map.removeLayer(routePolyline);
+      }
+
+      // Order of points representing G30 route
+      const routeKeys = [
+        'jiuquan', 'guazhou', 'xingxingxia', 'hami', 
+        'qijiaojing', 'shanshan', 'turpan', 'dabancheng', 'urumqi', 'tianchi'
+      ];
+      
+      const routePoints = routeKeys.map(k => locations[k].coords);
+
+      routePolyline = L.polyline(routePoints, {
+        color: 'var(--color-primary)',
+        weight: 4,
+        opacity: 0.8,
+        lineJoin: 'round',
+        dashArray: '8, 8'
+      }).addTo(map);
+      
+      // Pulsing effect glow line underneath
+      const glowLine = L.polyline(routePoints, {
+        color: 'var(--color-secondary)',
+        weight: 12,
+        opacity: 0.15,
+        lineJoin: 'round'
+      }).addTo(map);
+    }
+
+    // Switch between 6-day and 7-day timelines
+    function switchRoutePlan(days) {
+      currentTab = days;
+      document.getElementById('btn-tab-6').classList.toggle('active', days === 6);
+      document.getElementById('btn-tab-7').classList.toggle('active', days === 7);
+      
+      // Update calculator distance estimation
+      const totalDist = days === 6 ? 2300 : 2500;
+      document.getElementById('calc-miles').innerText = totalDist + ' km';
+      calculateCosts();
+
+      renderTimeline();
+      setActiveDay(0);
+    }
+
+    // Render Timeline on left panel
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      container.innerHTML = '';
+      
+      const activeItinerary = currentTab === 6 ? itinerary6Days : itinerary7Days;
+
+      activeItinerary.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `timeline-item ${index === activeDayIndex ? 'active' : ''}`;
+        div.id = `day-item-${index}`;
+        div.onclick = () => setActiveDay(index);
+
+        div.innerHTML = `
+          <div class="timeline-dot"></div>
+          <div class="timeline-header">
+            <span class="timeline-day">${item.day}</span>
+            <span class="timeline-meta">${item.distance} | ${item.duration}</span>
+          </div>
+          <div class="timeline-title">${item.title}</div>
+          <div class="day-detail">
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                上午安排
+              </div>
+              <div class="detail-content">${item.morning}</div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                下午安排 (含防暑防晒休整)
+              </div>
+              <div class="detail-content">${item.afternoon}</div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                傍晚与入住提示
+              </div>
+              <div class="detail-content">${item.evening}</div>
+            </div>
+            <div class="detail-section" style="background: rgba(249, 115, 22, 0.05); padding: 6px; border-radius: 4px; border-left: 2px solid var(--color-accent); margin-top: 5px;">
+              <div class="detail-label" style="color: var(--color-accent);">
+                <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                老人儿童贴心细节
+              </div>
+              <div class="detail-content" style="font-size:0.75rem;">${item.tips}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Set Active Day and Sync with Map view
+    function setActiveDay(index) {
+      activeDayIndex = index;
+      const activeItinerary = currentTab === 6 ? itinerary6Days : itinerary7Days;
+      const currentDayData = activeItinerary[index];
+
+      // Remove active class from other items
+      document.querySelectorAll('.timeline-item').forEach((item, idx) => {
+        item.classList.toggle('active', idx === index);
+      });
+
+      // Highlight active markers & reset others
+      const stays = ['jiuquan', 'hami', 'urumqi'];
+      for (let key in markers) {
+        let type = stays.includes(key) ? 'stay' : 'sight';
+        const isCurrentLoc = currentDayData.locations.includes(key);
+        markers[key].setIcon(createCustomIcon(type, locations[key].name, isCurrentLoc));
+        
+        if (isCurrentLoc) {
+          markers[key].setZIndexOffset(1000);
+        } else {
+          markers[key].setZIndexOffset(0);
+        }
+      }
+
+      // Fly map to fit the bounds of active day locations
+      if (currentDayData.locations.length > 0) {
+        const coords = currentDayData.locations.map(key => locations[key].coords);
+        if (coords.length === 1) {
+          // If only 1 city (e.g. D2 Hami stay), zoom in close
+          map.setView(coords[0], 11, { animate: true, duration: 1.2 });
+          markers[currentDayData.locations[0]].openPopup();
+        } else {
+          // Fit boundaries of multiple coordinates
+          const bounds = L.latLngBounds(coords);
+          map.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 9,
+            animate: true,
+            duration: 1.2
+          });
+        }
+      }
+    }
+
+    // Cost Calculator Logic
+    function calculateCosts() {
+      const fuelRate = parseFloat(document.getElementById('fuel-rate').value) || 0;
+      const fuelPrice = parseFloat(document.getElementById('fuel-price').value) || 0;
+      const dist = currentTab === 6 ? 2300 : 2500;
+
+      // Fuel cost calculation
+      const totalFuelCost = Math.round((dist / 100) * fuelRate * fuelPrice);
+      // Toll cost calculation: approx 0.43 yuan per km in Gansu/Xinjiang G30
+      const totalTollCost = Math.round(dist * 0.43);
+
+      document.getElementById('result-fuel').innerText = `¥${totalFuelCost.toLocaleString()}`;
+      document.getElementById('result-toll').innerText = `¥${totalTollCost.toLocaleString()}`;
+    }
+
+    // Checklist Logic (Persistent via LocalStorage)
+    const checklistPrefix = 'travel_map_chk_';
+    
+    function loadChecklists() {
+      // Load Car Checks
+      const carItems = document.querySelectorAll('#items-car input');
+      carItems.forEach((input, index) => {
+        const saved = localStorage.getItem(`${checklistPrefix}car_${index}`);
+        if (saved === 'true') input.checked = true;
+      });
+      updateChecklistProgress('car');
+
+      // Load Family Checks
+      const familyItems = document.querySelectorAll('#items-family input');
+      familyItems.forEach((input, index) => {
+        const saved = localStorage.getItem(`${checklistPrefix}family_${index}`);
+        if (saved === 'true') input.checked = true;
+      });
+      updateChecklistProgress('family');
+    }
+
+    function updateChecklist(category) {
+      const items = document.querySelectorAll(`#items-${category} input`);
+      items.forEach((input, index) => {
+        localStorage.setItem(`${checklistPrefix}${category}_${index}`, input.checked);
+      });
+      updateChecklistProgress(category);
+    }
+
+    function updateChecklistProgress(category) {
+      const items = document.querySelectorAll(`#items-${category} input`);
+      const checked = Array.from(items).filter(i => i.checked).length;
+      document.getElementById(`progress-${category}`).innerText = `${checked}/${items.length}`;
+    }
+
+    // Page Load Setup
+    window.onload = () => {
+      initMap();
+      switchRoutePlan(7); // default comfortable 7 days itinerary
+      loadChecklists();
+    };
+  </script>
+</body>
+</html>
